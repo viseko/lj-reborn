@@ -14,7 +14,7 @@
 ### 0. Окружение
 
 - [x] 0.1 PostgreSQL: служба 16 запущена, `psql` в PATH, роль `lj_app`, базы `lj_dev` и `lj_test`
-- [ ] 0.2 Git-репозиторий: `main`, `.gitignore`, `.gitattributes`, `.editorconfig`, первый коммит по конвенции
+- [x] 0.2 Git-репозиторий: `main`, `.gitignore`, `.gitattributes`, `.editorconfig`, первый коммит по конвенции
 - [ ] 0.3 pnpm-воркспейсы: корневой `package.json`, `pnpm-workspace.yaml`, пакеты `backend` и `frontend`
 - [ ] 0.4 Инструменты качества: TypeScript base config, ESLint, Prettier, Stylelint, настройки VS Code (format on save)
 - [ ] 0.5 Хуки и коммиты: husky, lint-staged, commitlint
