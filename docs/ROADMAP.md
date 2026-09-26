@@ -17,8 +17,8 @@
 - [x] 0.2 Git-репозиторий: `main`, `.gitignore`, `.gitattributes`, `.editorconfig`, первый коммит по конвенции
 - [x] 0.3 pnpm-воркспейсы: корневой `package.json`, `pnpm-workspace.yaml`, пакеты `backend` и `frontend`
 - [ ] 0.4 Инструменты качества, по частям:
-  - [ ] 0.4.1 Prettier и настройки VS Code (format on save, рекомендуемые расширения)
-  - [ ] 0.4.2 ESLint (flat config) и typescript-eslint
+  - [x] 0.4.1 Prettier и настройки VS Code (format on save, рекомендуемые расширения)
+  - [x] 0.4.2 ESLint (flat config) и typescript-eslint
   - [ ] 0.4.3 Базовый tsconfig
   - Stylelint для SCSS отложен до модуля 5 (появится фронтенд)
 - [ ] 0.5 Хуки и коммиты: husky, lint-staged, commitlint
