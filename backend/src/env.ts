@@ -11,12 +11,5 @@ const schema = z.object({
   logLevel: z.string().default("info"),
 });
 
-// Промежуточный объект с переменными окружения
-const values = {
-  nodeEnv: process.env.NODE_ENV,
-  port: process.env.PORT,
-  logLevel: process.env.LOG_LEVEL,
-};
-
 // Парсим и экспортируем значения переменных окружения
-export const env = schema.parse(values);
+export const env = schema.parse(process.env);
