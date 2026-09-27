@@ -25,7 +25,7 @@
 
 ### 1. Каркас бэкенда
 
-- [ ] 1.1 Установка зависимостей (`fastify`, `pino`, `pino-pretty`, `dotenv`, `zod`, `tsx`, `vitest`) и структура `src/app.ts` + `src/server.ts`
+- [x] 1.1 Установка зависимостей (`fastify`, `pino`, `pino-pretty`, `dotenv`, `zod`, `tsx`, `vitest`) и структура `src/app.ts` + `src/server.ts`
 - [ ] 1.2 `.env` и конфиг: чтение переменных окружения, проверка через Zod
 - [ ] 1.3 Первый Fastify-сервер: `app.ts` собирает приложение, `server.ts` его запускает, health-роут
 - [ ] 1.4 Обработка ошибок: единый формат ошибок, `setErrorHandler`, `setNotFoundHandler`
