@@ -66,7 +66,7 @@
 
 ## Решения
 
-- Репозиторий на GitHub, CI на GitHub Actions
+- Репозиторий на GitHub (публичный): `github.com/viseko/lj-reborn`, CI на GitHub Actions
 - Деплой: фронтенд на Vercel; бэкенд (Fastify + `node-cron`) отдельным долгоживущим процессом (Render/Railway, позже возможно VPS); база во внешнем Postgres (например, Neon)
 - Фронт и бэк на разных доменах: учесть в cookie (`SameSite`, `Domain`) и CORS в модуле 3
 - Локально работаем с PostgreSQL 16 (единственная версия со службой); 14 и 17 не трогаем
