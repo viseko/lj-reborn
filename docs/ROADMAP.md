@@ -21,7 +21,7 @@
   - [x] 0.4.2 ESLint (flat config) и typescript-eslint
   - [x] 0.4.3 Базовый tsconfig
   - Stylelint для SCSS отложен до модуля 5 (появится фронтенд)
-- [ ] 0.5 Хуки и коммиты: husky, lint-staged, commitlint
+- [x] 0.5 Хуки и коммиты: husky, lint-staged, commitlint
 
 ### 1. Каркас бэкенда
 
