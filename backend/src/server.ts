@@ -1,6 +1,6 @@
 // Импортирует app.ts, и вызывает у него .listen()
-import { buildApp } from "./app";
-import { env } from "./env";
+import { buildApp } from "./app.js";
+import { env } from "./env.js";
 
 const app = buildApp();
 

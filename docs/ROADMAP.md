@@ -29,7 +29,7 @@
 - [x] 1.2 `.env` и конфиг: чтение переменных окружения, проверка через Zod
 - [x] 1.3 Первый Fastify-сервер: `app.ts` собирает приложение, `server.ts` его запускает, health-роут
 - [x] 1.4 Обработка ошибок: единый формат ошибок, `setErrorHandler`, `setNotFoundHandler`
-- [ ] 1.5 Vitest: первый тест через `fastify.inject`, скрипт `test`
+- [x] 1.5 Vitest: первый тест через `fastify.inject`, скрипт `test`
 
 ### 2. SQL с нуля и Prisma
 

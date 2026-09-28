@@ -2,7 +2,7 @@
 // Экспортирует готовое приложение, но не запускает его слушать сеть.
 
 import Fastify from "fastify";
-import { env } from "./env";
+import { env } from "./env.js";
 
 export function buildApp() {
   // Инициализация
