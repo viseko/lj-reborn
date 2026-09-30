@@ -6,9 +6,11 @@ config();
 
 // Схема валидации
 const schema = z.object({
-  nodeEnv: z.enum(["development", "test", "production"]).default("development"),
-  port: z.coerce.number().int().positive().default(3001),
-  logLevel: z.string().default("info"),
+  NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
+  PORT: z.coerce.number().int().positive().default(3001),
+  LOG_LEVEL: z.string().default("info"),
+  DATABASE_URL: z.string().min(1),
+  DATABASE_URL_TEST: z.string().min(1),
 });
 
 // Парсим и экспортируем значения переменных окружения

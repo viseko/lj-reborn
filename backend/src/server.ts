@@ -6,7 +6,7 @@ const app = buildApp();
 
 app
   .listen({
-    port: env.port,
+    port: env.PORT,
   })
   .catch((err) => {
     app.log.error(err);

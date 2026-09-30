@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
+    "@prisma/client": "7.10.0",
     "dotenv": "18.0.4",
     "fastify": "5.12.5",
     "pino": "10.3.1",
@@ -11,6 +12,8 @@
     "zod": "4.6.5"
   },
   "devDependencies": {
+    "@types/node": "22.20.4",
+    "prisma": "7.10.0",
     "tsx": "4.23.15",
     "vitest": "5.0.2"
   },

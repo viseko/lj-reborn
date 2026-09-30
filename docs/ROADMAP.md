@@ -37,7 +37,7 @@
 - [x] 2.2 SQL: CRUD — `INSERT`/`SELECT`/`UPDATE`/`DELETE`, фильтры и сортировка
 - [x] 2.3 SQL: связи между таблицами — `FOREIGN KEY`, `JOIN`
 - [x] 2.4 SQL: индексы и `EXPLAIN` (кратко, для понимания зачем)
-- [ ] 2.5 Prisma: установка, `schema.prisma`, `DATABASE_URL` (dev/test), генерация клиента
+- [x] 2.5 Prisma: установка, `schema.prisma`, `DATABASE_URL` (dev/test), генерация клиента
 - [ ] 2.6 Prisma: модель `User`, первая миграция, первый запрос из Fastify-плагина + тест
 
 ### 3. Регистрация и логин

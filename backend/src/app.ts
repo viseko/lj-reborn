@@ -8,9 +8,9 @@ export function buildApp() {
   // Инициализация
   const app = Fastify({
     logger: {
-      level: env.logLevel,
+      level: env.LOG_LEVEL,
       transport:
-        env.nodeEnv === "production"
+        env.NODE_ENV === "production"
           ? undefined
           : {
               target: "pino-pretty",
