@@ -4,7 +4,7 @@ dist/
 coverage/
 playwright-report/
 test-results/
-src/generated/
+**/src/generated/
 
 .DS_Store
 Thumbs.db
