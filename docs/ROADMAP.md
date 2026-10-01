@@ -42,9 +42,13 @@
 
 ### 3. Регистрация и логин
 
-- [ ] Хеширование паролей, валидация входных данных
-- [ ] JWT, httpOnly-cookie, refresh-ротация, выход
-- [ ] Тесты (unit и интеграционные)
+- [ ] 3.1 Валидация: Zod-схемы регистрации и логина (email, `login`, `username`, пароль)
+- [ ] 3.2 Хеширование паролей (argon2), хранение только хеша
+- [ ] 3.3 CORS (`@fastify/cors`): origin из env, `credentials` — подготовка к cross-origin cookie (фронт и бэк на разных доменах)
+- [ ] 3.4 JWT-утилиты: подпись/проверка access и refresh токенов, секреты в env
+- [ ] 3.5 Модель `RefreshToken`/сессии в Prisma + миграция (нужна для ротации и инвалидации)
+- [ ] 3.6 Эндпоинты `register`/`login`/`refresh`/`logout` + httpOnly-cookie (`@fastify/cookie`, `SameSite`/`Secure`)
+- [ ] 3.7 Тесты: unit (хеширование, JWT-утилиты) + интеграционные (полный флоу через `fastify.inject` и `lj_test`)
 
 ### 4. Восстановление пароля
 
