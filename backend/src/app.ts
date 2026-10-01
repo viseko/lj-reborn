@@ -3,6 +3,7 @@
 
 import Fastify from "fastify";
 import { env } from "./env.js";
+import prismaPlugin from "./plugins/prisma.js";
 
 export function buildApp() {
   // Инициализация
@@ -18,8 +19,16 @@ export function buildApp() {
     },
   });
 
+  app.register(prismaPlugin);
+
   // Эндпойнты
   app.get("/health", async () => ({ status: "ok" }));
+
+  app.get("/users/count", async (request) => {
+    const count = await request.server.prisma.user.count();
+
+    return { count };
+  });
 
   // Ловля ошибок
   // * 404
