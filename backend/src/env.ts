@@ -1,5 +1,5 @@
 import { config } from "dotenv";
-import { z } from "zod";
+import z from "zod";
 
 // Читаем .env и заполняем process.env
 config();
