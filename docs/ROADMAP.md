@@ -46,7 +46,7 @@
 - [x] 3.2 Хеширование паролей (argon2), хранение только хеша
 - [x] 3.3 CORS (`@fastify/cors`): origin из env, `credentials` — подготовка к cross-origin cookie (фронт и бэк на разных доменах)
 - [x] 3.4 JWT-утилиты: подпись/проверка access и refresh токенов, секреты в env
-- [ ] 3.5 Модель `RefreshToken`/сессии в Prisma + миграция (нужна для ротации и инвалидации)
+- [x] 3.5 Модель `RefreshToken`/сессии в Prisma + миграция (нужна для ротации и инвалидации)
 - [ ] 3.6 Эндпоинты `register`/`login`/`refresh`/`logout` + httpOnly-cookie (`@fastify/cookie`, `SameSite`/`Secure`)
 - [ ] 3.7 Тесты: unit (хеширование, JWT-утилиты) + интеграционные (полный флоу через `fastify.inject` и `lj_test`)
 
