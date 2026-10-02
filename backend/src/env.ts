@@ -12,6 +12,8 @@ const schema = z.object({
   DATABASE_URL: z.string().min(1),
   DATABASE_URL_TEST: z.string().min(1),
   CORS_ORIGIN: z.string().default("http://localhost:3000"),
+  JWT_ACCESS_SECRET: z.string().min(32),
+  JWT_REFRESH_SECRET: z.string().min(32),
 });
 
 // Парсим и экспортируем значения переменных окружения

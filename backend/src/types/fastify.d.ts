@@ -5,3 +5,9 @@ declare module "fastify" {
     prisma: PrismaClient;
   }
 }
+
+declare module "@fastify/jwt" {
+  interface FastifyJWT {
+    namespaces: "access" | "refresh";
+  }
+}

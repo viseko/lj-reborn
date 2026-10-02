@@ -4,6 +4,7 @@
 import Fastify from "fastify";
 import { env } from "./env.js";
 import prismaPlugin from "./plugins/prisma.js";
+import jwtPlugin from "./plugins/jwt.js";
 import cors from "@fastify/cors";
 
 export function buildApp() {
@@ -25,6 +26,7 @@ export function buildApp() {
     credentials: true,
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
   });
+  app.register(jwtPlugin);
   app.register(prismaPlugin);
 
   // Эндпойнты
