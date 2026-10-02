@@ -4,6 +4,7 @@
 import Fastify from "fastify";
 import { env } from "./env.js";
 import prismaPlugin from "./plugins/prisma.js";
+import cors from "@fastify/cors";
 
 export function buildApp() {
   // Инициализация
@@ -19,6 +20,11 @@ export function buildApp() {
     },
   });
 
+  app.register(cors, {
+    origin: env.NODE_ENV === "development" ? true : env.CORS_ORIGIN,
+    credentials: true,
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
+  });
   app.register(prismaPlugin);
 
   // Эндпойнты

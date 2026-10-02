@@ -11,6 +11,7 @@ const schema = z.object({
   LOG_LEVEL: z.string().default("info"),
   DATABASE_URL: z.string().min(1),
   DATABASE_URL_TEST: z.string().min(1),
+  CORS_ORIGIN: z.string().default("http://localhost:3000"),
 });
 
 // Парсим и экспортируем значения переменных окружения
