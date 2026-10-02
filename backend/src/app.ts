@@ -6,6 +6,8 @@ import { env } from "./env.js";
 import prismaPlugin from "./plugins/prisma.js";
 import jwtPlugin from "./plugins/jwt.js";
 import cors from "@fastify/cors";
+import cookie from "@fastify/cookie";
+import { authRoutes } from "./auth/routes.js";
 
 export function buildApp() {
   // Инициализация
@@ -28,6 +30,10 @@ export function buildApp() {
   });
   app.register(jwtPlugin);
   app.register(prismaPlugin);
+  app.register(cookie);
+  app.register(authRoutes, {
+    prefix: "/auth",
+  });
 
   // Эндпойнты
   app.get("/health", async () => ({ status: "ok" }));

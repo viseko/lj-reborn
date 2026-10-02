@@ -48,7 +48,7 @@
 - [x] 3.4 JWT-утилиты: подпись/проверка access и refresh токенов, секреты в env
 - [x] 3.5 Модель `RefreshToken`/сессии в Prisma + миграция (нужна для ротации и инвалидации)
 - [ ] 3.6 Эндпоинты `register`/`login`/`refresh`/`logout` + httpOnly-cookie, по частям:
-  - [ ] 3.6.1 `@fastify/cookie`: плагин, опции (`httpOnly`, `secure`, `sameSite`), префикс маршрутов `/auth`
+  - [x] 3.6.1 `@fastify/cookie`: плагин, опции (`httpOnly`, `secure`, `sameSite`), префикс маршрутов `/auth`
   - [ ] 3.6.2 `POST /auth/register`
   - [ ] 3.6.3 `POST /auth/login`
   - [ ] 3.6.4 `POST /auth/refresh` (с ротацией)
