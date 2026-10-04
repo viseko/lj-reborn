@@ -1,7 +1,12 @@
 import type { FastifyInstance } from "fastify";
 import { loginSchema, registerSchema } from "./schemas.js";
-import { issueTokenPair, setAuthCookies } from "./tokens.js";
+import { issueTokenPair, setAuthCookies, unauthorized } from "./tokens.js";
 import { DUMMY_PASSWORD_HASH, hashPassword, verifyPassword } from "./password.js";
+
+interface TokenPayload {
+  sub: string;
+  jti?: string;
+}
 
 export async function authRoutes(app: FastifyInstance) {
   app.post("/register", async (request, reply) => {
@@ -62,5 +67,75 @@ export async function authRoutes(app: FastifyInstance) {
           username: user.username,
         },
       });
+  });
+
+  app.post("/refresh", async (request, reply) => {
+    // 1. Достаём refresh-токен из куков
+    const token = request.cookies["refresh_token"];
+
+    if (!token) {
+      return unauthorized(reply);
+    }
+
+    // 2. Проверяем подпись и срок JWT
+    let payload: TokenPayload;
+
+    try {
+      payload = app.jwt.refresh.verify<TokenPayload>(token);
+    } catch {
+      return unauthorized(reply);
+    }
+
+    // 3. Ищем запись в базе по jti
+    const tokenRecord = payload.jti
+      ? await app.prisma.refreshToken.findUnique({
+          where: {
+            id: payload.jti,
+          },
+        })
+      : null;
+
+    // 4. Разбираем два плохих исхода
+    // - "уже отозван" - признак кражи, отзываем все сессии юзера
+    if (tokenRecord?.revokedAt) {
+      await app.prisma.refreshToken.updateMany({
+        where: {
+          userId: tokenRecord.userId,
+          revokedAt: null,
+        },
+        data: {
+          revokedAt: new Date(),
+        },
+      });
+
+      return unauthorized(reply);
+    }
+
+    // - нет записи или истекло - отказ, без массового отзыва
+    if (!tokenRecord || tokenRecord?.expiresAt < new Date()) {
+      return unauthorized(reply);
+    }
+
+    // 5. Всё ок, отзываем старую запись, выдаём новую пару
+    // * доп проверка на одновременный запрос
+    try {
+      await app.prisma.refreshToken.update({
+        where: {
+          id: tokenRecord.id,
+          revokedAt: null,
+        },
+        data: {
+          revokedAt: new Date(),
+        },
+      });
+    } catch {
+      return unauthorized(reply, "Refresh token already used");
+    }
+
+    const { accessToken, refreshToken } = await issueTokenPair(app, tokenRecord.userId);
+
+    setAuthCookies(reply, accessToken, refreshToken).status(200).send({
+      success: true,
+    });
   });
 }

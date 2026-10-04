@@ -45,3 +45,12 @@ export function setAuthCookies(reply: FastifyReply, accessToken: string, refresh
       maxAge: REFRESH_TOKEN_TTL_DAYS * 24 * 60 * 60,
     });
 }
+
+export function unauthorized(reply: FastifyReply, message = "Invalid or expired refresh token") {
+  return reply.status(401).send({
+    error: {
+      code: "UNAUTHORIZED",
+      message,
+    },
+  });
+}

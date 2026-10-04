@@ -51,7 +51,7 @@
   - [x] 3.6.1 `@fastify/cookie`: плагин, опции (`httpOnly`, `secure`, `sameSite`), префикс маршрутов `/auth`
   - [x] 3.6.2 `POST /auth/register`
   - [x] 3.6.3 `POST /auth/login`
-  - [ ] 3.6.4 `POST /auth/refresh` (с ротацией)
+  - [x] 3.6.4 `POST /auth/refresh` (с ротацией)
   - [ ] 3.6.5 `POST /auth/logout`
 - [ ] 3.7 Тесты: unit (хеширование, JWT-утилиты) + интеграционные (полный флоу через `fastify.inject` и `lj_test`)
 
