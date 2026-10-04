@@ -1,9 +1,7 @@
 import type { FastifyInstance } from "fastify";
-import { registerSchema } from "./schemas.js";
-import { issueTokenPair } from "./tokens.js";
-import { ACCESS_TOKEN_TTL_MINUTES, REFRESH_TOKEN_TTL_DAYS } from "./constants.js";
-import { hashPassword } from "./password.js";
-import { env } from "../env.js";
+import { loginSchema, registerSchema } from "./schemas.js";
+import { issueTokenPair, setAuthCookies } from "./tokens.js";
+import { DUMMY_PASSWORD_HASH, hashPassword, verifyPassword } from "./password.js";
 
 export async function authRoutes(app: FastifyInstance) {
   app.post("/register", async (request, reply) => {
@@ -21,22 +19,42 @@ export async function authRoutes(app: FastifyInstance) {
 
     const { accessToken, refreshToken } = await issueTokenPair(app, user.id);
 
-    reply
-      .setCookie("access_token", accessToken, {
-        httpOnly: true,
-        secure: env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/",
-        maxAge: ACCESS_TOKEN_TTL_MINUTES * 60,
-      })
-      .setCookie("refresh_token", refreshToken, {
-        httpOnly: true,
-        secure: env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/auth",
-        maxAge: REFRESH_TOKEN_TTL_DAYS * 24 * 60 * 60,
-      })
+    setAuthCookies(reply, accessToken, refreshToken)
       .status(201)
+      .send({
+        user: {
+          id: user.id,
+          login: user.login,
+          username: user.username,
+        },
+      });
+  });
+
+  app.post("/login", async (request, reply) => {
+    const body = loginSchema.parse(request.body);
+
+    const user = await app.prisma.user.findUnique({
+      where: {
+        login: body.login,
+      },
+    });
+
+    const passwordHash = user?.passwordHash ?? DUMMY_PASSWORD_HASH;
+    const isValid = await verifyPassword(passwordHash, body.password);
+
+    if (!user || !isValid) {
+      return reply.status(401).send({
+        error: {
+          code: "INVALID_CREDENTIALS",
+          message: "Invalid login or password",
+        },
+      });
+    }
+
+    const { accessToken, refreshToken } = await issueTokenPair(app, user.id);
+
+    setAuthCookies(reply, accessToken, refreshToken)
+      .status(200)
       .send({
         user: {
           id: user.id,

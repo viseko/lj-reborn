@@ -50,7 +50,7 @@
 - [ ] 3.6 Эндпоинты `register`/`login`/`refresh`/`logout` + httpOnly-cookie, по частям:
   - [x] 3.6.1 `@fastify/cookie`: плагин, опции (`httpOnly`, `secure`, `sameSite`), префикс маршрутов `/auth`
   - [x] 3.6.2 `POST /auth/register`
-  - [ ] 3.6.3 `POST /auth/login`
+  - [x] 3.6.3 `POST /auth/login`
   - [ ] 3.6.4 `POST /auth/refresh` (с ротацией)
   - [ ] 3.6.5 `POST /auth/logout`
 - [ ] 3.7 Тесты: unit (хеширование, JWT-утилиты) + интеграционные (полный флоу через `fastify.inject` и `lj_test`)
