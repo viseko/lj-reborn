@@ -29,13 +29,3 @@ describe("not found", () => {
     expect(JSON.parse(response.body).error.code).toBe("NOT_FOUND");
   });
 });
-
-describe("users count route", () => {
-  it("returns user count", async () => {
-    const response = await doResponse("/users/count");
-    const body = JSON.parse(response.body);
-
-    expect(response.statusCode).toBe(200);
-    expect(body.count).toBe(1);
-  });
-});

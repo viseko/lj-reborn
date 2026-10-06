@@ -34,18 +34,13 @@ export function buildApp() {
   app.register(jwtPlugin);
   app.register(prismaPlugin);
   app.register(cookie);
+
+  // Эндпойнты
   app.register(authRoutes, {
     prefix: "/auth",
   });
 
-  // Эндпойнты
   app.get("/health", async () => ({ status: "ok" }));
-
-  app.get("/users/count", async (request) => {
-    const count = await request.server.prisma.user.count();
-
-    return { count };
-  });
 
   // Ловля ошибок
   // * 404
