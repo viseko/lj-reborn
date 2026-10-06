@@ -1,6 +1,6 @@
 import type { FastifyInstance } from "fastify";
 import { loginSchema, registerSchema } from "./schemas.js";
-import { issueTokenPair, setAuthCookies, unauthorized } from "./tokens.js";
+import { clearAuthCookies, issueTokenPair, setAuthCookies, unauthorized } from "./tokens.js";
 import { DUMMY_PASSWORD_HASH, hashPassword, verifyPassword } from "./password.js";
 
 interface TokenPayload {
@@ -135,6 +135,34 @@ export async function authRoutes(app: FastifyInstance) {
     const { accessToken, refreshToken } = await issueTokenPair(app, tokenRecord.userId);
 
     setAuthCookies(reply, accessToken, refreshToken).status(200).send({
+      success: true,
+    });
+  });
+
+  app.post("/logout", async (request, reply) => {
+    const token = request.cookies["refresh_token"];
+
+    if (token) {
+      try {
+        const payload = app.jwt.refresh.verify<TokenPayload>(token);
+
+        if (payload.jti) {
+          await app.prisma.refreshToken.update({
+            where: {
+              id: payload.jti,
+              revokedAt: null,
+            },
+            data: {
+              revokedAt: new Date(),
+            },
+          });
+        }
+      } catch {
+        // токен невалиден, просрочен или отозван - не беда
+      }
+    }
+
+    return clearAuthCookies(reply).status(200).send({
       success: true,
     });
   });

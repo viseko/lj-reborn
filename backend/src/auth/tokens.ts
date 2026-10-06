@@ -46,6 +46,16 @@ export function setAuthCookies(reply: FastifyReply, accessToken: string, refresh
     });
 }
 
+export function clearAuthCookies(reply: FastifyReply) {
+  return reply
+    .clearCookie("access_token", {
+      path: "/",
+    })
+    .clearCookie("refresh_token", {
+      path: "/auth",
+    });
+}
+
 export function unauthorized(reply: FastifyReply, message = "Invalid or expired refresh token") {
   return reply.status(401).send({
     error: {
