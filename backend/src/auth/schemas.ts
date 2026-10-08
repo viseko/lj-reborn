@@ -16,3 +16,7 @@ export const loginSchema = registerSchema.pick({
   login: true,
   password: true,
 });
+
+export const forgotPasswordSchema = z.object({
+  identifier: z.string().min(1),
+});

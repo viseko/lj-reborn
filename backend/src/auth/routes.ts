@@ -1,7 +1,11 @@
 import type { FastifyInstance } from "fastify";
-import { loginSchema, registerSchema } from "./schemas.js";
+import { forgotPasswordSchema, loginSchema, registerSchema } from "./schemas.js";
 import { clearAuthCookies, issueTokenPair, setAuthCookies, unauthorized } from "./tokens.js";
 import { DUMMY_PASSWORD_HASH, hashPassword, verifyPassword } from "./password.js";
+import { generateReserToken } from "./resetToken.js";
+import { PASSWORD_RESET_TOKEN_TTL_MINUTES } from "./constants.js";
+import { env } from "../env.js";
+import { sendPasswordResetEmail } from "./email.js";
 
 interface TokenPayload {
   sub: string;
@@ -164,6 +168,42 @@ export async function authRoutes(app: FastifyInstance) {
 
     return clearAuthCookies(reply).status(200).send({
       success: true,
+    });
+  });
+
+  app.post("/forgot-password", async (request, reply) => {
+    const body = forgotPasswordSchema.parse(request.body);
+
+    const user = await app.prisma.user.findFirst({
+      where: {
+        OR: [
+          { email: body.identifier },
+          {
+            login: body.identifier,
+          },
+        ],
+      },
+    });
+
+    if (user) {
+      const { rawToken, tokenHash } = generateReserToken();
+      const expiresAt = new Date(Date.now() + PASSWORD_RESET_TOKEN_TTL_MINUTES * 60 * 1000);
+
+      await app.prisma.passwordResetToken.create({
+        data: {
+          userId: user.id,
+          tokenHash,
+          expiresAt,
+        },
+      });
+
+      const resetLink = `${env.CORS_ORIGIN}/reset-password?token=${rawToken}`;
+
+      await sendPasswordResetEmail(request.log, user.email, resetLink);
+    }
+
+    return reply.status(200).send({
+      message: "If an account with that email or login exists, a reset link has been sent.",
     });
   });
 }
