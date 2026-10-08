@@ -1,6 +1,6 @@
 import { randomBytes, createHash } from "node:crypto";
 
-export function generateReserToken() {
+export function generateResetToken() {
   const rawToken = randomBytes(32).toString("hex");
   const tokenHash = hashResetToken(rawToken);
 

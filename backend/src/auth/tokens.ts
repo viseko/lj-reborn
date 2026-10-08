@@ -64,3 +64,12 @@ export function unauthorized(reply: FastifyReply, message = "Invalid or expired 
     },
   });
 }
+
+export function invalidToken(reply: FastifyReply, message = "Invalid or expired reset token") {
+  return reply.status(401).send({
+    error: {
+      code: "INVALID_TOKEN",
+      message,
+    },
+  });
+}

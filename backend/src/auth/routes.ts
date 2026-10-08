@@ -1,8 +1,19 @@
 import type { FastifyInstance } from "fastify";
-import { forgotPasswordSchema, loginSchema, registerSchema } from "./schemas.js";
-import { clearAuthCookies, issueTokenPair, setAuthCookies, unauthorized } from "./tokens.js";
+import {
+  forgotPasswordSchema,
+  loginSchema,
+  registerSchema,
+  resetPasswordSchema,
+} from "./schemas.js";
+import {
+  clearAuthCookies,
+  invalidToken,
+  issueTokenPair,
+  setAuthCookies,
+  unauthorized,
+} from "./tokens.js";
 import { DUMMY_PASSWORD_HASH, hashPassword, verifyPassword } from "./password.js";
-import { generateReserToken } from "./resetToken.js";
+import { generateResetToken, hashResetToken } from "./resetToken.js";
 import { PASSWORD_RESET_TOKEN_TTL_MINUTES } from "./constants.js";
 import { env } from "../env.js";
 import { sendPasswordResetEmail } from "./email.js";
@@ -186,7 +197,7 @@ export async function authRoutes(app: FastifyInstance) {
     });
 
     if (user) {
-      const { rawToken, tokenHash } = generateReserToken();
+      const { rawToken, tokenHash } = generateResetToken();
       const expiresAt = new Date(Date.now() + PASSWORD_RESET_TOKEN_TTL_MINUTES * 60 * 1000);
 
       await app.prisma.passwordResetToken.create({
@@ -204,6 +215,58 @@ export async function authRoutes(app: FastifyInstance) {
 
     return reply.status(200).send({
       message: "If an account with that email or login exists, a reset link has been sent.",
+    });
+  });
+
+  app.post("/reset-password", async (request, reply) => {
+    const body = resetPasswordSchema.parse(request.body);
+    const tokenHash = hashResetToken(body.token);
+
+    const tokenRecord = await app.prisma.passwordResetToken.findUnique({
+      where: { tokenHash },
+    });
+
+    if (!tokenRecord || tokenRecord.usedAt || tokenRecord.expiresAt < new Date()) {
+      return invalidToken(reply);
+    }
+
+    const newPasswordHash = await hashPassword(body.newPassword);
+
+    try {
+      await app.prisma.$transaction([
+        app.prisma.user.update({
+          where: {
+            id: tokenRecord.userId,
+          },
+          data: {
+            passwordHash: newPasswordHash,
+          },
+        }),
+        app.prisma.passwordResetToken.update({
+          where: {
+            id: tokenRecord.id,
+            usedAt: null,
+          },
+          data: {
+            usedAt: new Date(),
+          },
+        }),
+        app.prisma.refreshToken.updateMany({
+          where: {
+            userId: tokenRecord.userId,
+            revokedAt: null,
+          },
+          data: {
+            revokedAt: new Date(),
+          },
+        }),
+      ]);
+    } catch {
+      return invalidToken(reply);
+    }
+
+    return reply.status(200).send({
+      success: true,
     });
   });
 }
