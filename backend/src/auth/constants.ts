@@ -1,3 +1,4 @@
 export const ACCESS_TOKEN_TTL_MINUTES = 15;
 export const REFRESH_TOKEN_TTL_DAYS = 30;
 export const PASSWORD_RESET_TOKEN_TTL_MINUTES = 60;
+export const CLEANUP_GRACE_PERIOD_DAYS = 7;
