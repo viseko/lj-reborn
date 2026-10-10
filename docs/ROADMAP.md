@@ -5,7 +5,7 @@
 ## Стек
 
 - **Backend:** Fastify + TypeScript, Prisma, PostgreSQL 16, JWT (access в httpOnly-cookie + refresh), node-cron
-- **Frontend:** Next.js 16 (App Router), React, Zustand, SCSS-модули, кастомный pointer-based DnD, тёмная/светлая темы
+- **Frontend:** Next.js 16 (App Router), React, Zustand, SCSS-модули, кастомный pointer-based DnD, тёмная/светлая темы, методология Feature-Sliced Design, Storybook для компонентов
 - **Качество:** Vitest, Playwright, ESLint (flat config), Stylelint, Prettier, автоформат при сохранении, husky + lint-staged + commitlint, Conventional Commits, GitHub Actions
 - **Монорепо:** pnpm-воркспейсы, `backend/` и `frontend/`, общий `pnpm-lock.yaml` в корне
 
@@ -66,11 +66,11 @@
 
 ### 5. Каркас фронтенда
 
-- [ ] 5.1 Next.js App Router: создание проекта в монорепо, базовая структура
+- [x] 5.1 Next.js App Router: создание проекта в монорепо, базовая структура под Feature-Sliced Design (слои `src/{app,pages,widgets,features,entities,shared}`, роутинг Next.js — `app/` на корне пакета, пустой `pages/` для отличия от легаси Pages Router, по официальному гайду FSD+Next.js)
 - [ ] 5.2 SCSS-модули: настройка, соглашения, Stylelint (отложен с модуля 0.4)
 - [ ] 5.3 Дизайн-токены: цвета, типографика, spacing — CSS-переменные
 - [ ] 5.4 Тёмная/светлая тема: механизм переключения, сохранение выбора
-- [ ] 5.5 Кастомные компоненты: `Button`, `Input` с нуля, без нативных стилей браузера
+- [ ] 5.5 Кастомные компоненты: `Button`, `Input` с нуля, без нативных стилей браузера + настройка Storybook
 - [ ] 5.6 Стратегия рендеринга по типам страниц: публичные посты/профили — SSG/ISR, лента с подписками и приватные записи — SSR, формы/редактор/DnD — CSR; ревалидация постов on-demand (`revalidatePath`/`revalidateTag` в хендлерах создания/редактирования/удаления)
 
 ### 6. Страницы авторизации
