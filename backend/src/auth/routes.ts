@@ -188,7 +188,9 @@ export async function authRoutes(app: FastifyInstance) {
     const user = await app.prisma.user.findFirst({
       where: {
         OR: [
-          { email: body.identifier },
+          {
+            email: body.identifier,
+          },
           {
             login: body.identifier,
           },

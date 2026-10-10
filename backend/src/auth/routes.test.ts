@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { buildApp } from "../app.js";
+import { generateResetToken } from "./resetToken.js";
 
 const userData = {
   email: "register@test.com",
@@ -13,7 +14,28 @@ const endpoints = {
   login: "/auth/login",
   refresh: "/auth/refresh",
   logout: "/auth/logout",
+  forgotPassword: "/auth/forgot-password",
+  resetPassword: "/auth/reset-password",
 } as const;
+
+function registerTestUser(app: ReturnType<typeof buildApp>) {
+  return app.inject({
+    method: "POST",
+    url: endpoints.register,
+    payload: userData,
+  });
+}
+
+function loginTestUser(app: ReturnType<typeof buildApp>, password: string = userData.password) {
+  return app.inject({
+    method: "POST",
+    url: endpoints.login,
+    payload: {
+      login: userData.login,
+      password,
+    },
+  });
+}
 
 describe("auth routes", () => {
   let app: ReturnType<typeof buildApp>;
@@ -27,11 +49,7 @@ describe("auth routes", () => {
   });
 
   it("registers a new user and sets both cookies", async () => {
-    const response = await app.inject({
-      method: "POST",
-      url: endpoints.register,
-      payload: userData,
-    });
+    const response = await registerTestUser(app);
 
     expect(response.statusCode).toBe(201);
     expect(response.json().user.login).toBe(userData.login);
@@ -40,11 +58,7 @@ describe("auth routes", () => {
   });
 
   it("rejects duplicate emaill on register", async () => {
-    await app.inject({
-      method: "POST",
-      url: endpoints.register,
-      payload: userData,
-    });
+    await registerTestUser(app);
 
     const secondResponse = await app.inject({
       method: "POST",
@@ -59,11 +73,7 @@ describe("auth routes", () => {
   });
 
   it("login in with correct creentials", async () => {
-    await app.inject({
-      method: "POST",
-      url: endpoints.register,
-      payload: userData,
-    });
+    await registerTestUser(app);
 
     const response = await app.inject({
       method: "POST",
@@ -79,11 +89,7 @@ describe("auth routes", () => {
   });
 
   it("rejects login with wrong password", async () => {
-    await app.inject({
-      method: "POST",
-      url: endpoints.register,
-      payload: userData,
-    });
+    await registerTestUser(app);
 
     const response = await app.inject({
       method: "POST",
@@ -98,20 +104,9 @@ describe("auth routes", () => {
   });
 
   it("rotates tokens in refresh and detects reuse of the old one", async () => {
-    await app.inject({
-      method: "POST",
-      url: endpoints.register,
-      payload: userData,
-    });
+    await registerTestUser(app);
 
-    const loginRes = await app.inject({
-      method: "POST",
-      url: endpoints.login,
-      payload: {
-        login: userData.login,
-        password: userData.password,
-      },
-    });
+    const loginRes = await loginTestUser(app);
 
     const oldRefresh = loginRes.cookies.find((c) => c.name === "refresh_token")!.value;
 
@@ -148,11 +143,7 @@ describe("auth routes", () => {
   });
 
   it("logs out and clears both cookies", async () => {
-    await app.inject({
-      method: "POST",
-      url: endpoints.register,
-      payload: userData,
-    });
+    await registerTestUser(app);
 
     const logingRes = await app.inject({
       method: "POST",
@@ -176,5 +167,133 @@ describe("auth routes", () => {
     expect(logoutRes.statusCode).toBe(200);
     expect(logoutRes.cookies.find((c) => c.name === "access_token")?.maxAge).toBe(0);
     expect(logoutRes.cookies.find((c) => c.name === "refresh_token")?.maxAge).toBe(0);
+  });
+});
+
+describe("forgot password and reset password", () => {
+  let app: ReturnType<typeof buildApp>;
+
+  beforeEach(async () => {
+    app = buildApp();
+    await app.ready();
+    await app.prisma.user.deleteMany({});
+  });
+
+  it("create a reset token when the identifier matches a user", async () => {
+    await registerTestUser(app);
+
+    const response = await app.inject({
+      method: "POST",
+      url: endpoints.forgotPassword,
+      payload: {
+        identifier: userData.login,
+      },
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(await app.prisma.passwordResetToken.count()).toBe(1);
+  });
+
+  it("returns the same response and creates no token for an unknown identifier", async () => {
+    const response = await app.inject({
+      method: "POST",
+      url: endpoints.forgotPassword,
+      payload: {
+        identifier: "nosuchidentifier",
+      },
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(await app.prisma.passwordResetToken.count()).toBe(0);
+  });
+
+  it("resets the password and revokes existing sessions", async () => {
+    await registerTestUser(app);
+    const loginRes = await loginTestUser(app);
+
+    expect(loginRes.statusCode).toBe(200);
+
+    const user = await app.prisma.user.findUniqueOrThrow({
+      where: {
+        login: userData.login,
+      },
+    });
+
+    const { rawToken, tokenHash } = generateResetToken();
+
+    await app.prisma.passwordResetToken.create({
+      data: {
+        userId: user.id,
+        expiresAt: new Date(Date.now() + 60 * 60 * 1000),
+        tokenHash,
+      },
+    });
+
+    const newPassword = "someNewPassword";
+
+    const resetRes = await app.inject({
+      method: "POST",
+      url: endpoints.resetPassword,
+      payload: {
+        token: rawToken,
+        newPassword,
+      },
+    });
+
+    expect(resetRes.statusCode).toBe(200);
+
+    const oldPasswordLogin = await loginTestUser(app);
+    expect(oldPasswordLogin.statusCode).toBe(401);
+
+    const newPasswordLogin = await loginTestUser(app, newPassword);
+    expect(newPasswordLogin.statusCode).toBe(200);
+
+    const sessionBeforeReset = await app.prisma.refreshToken.findFirst({
+      where: {
+        userId: user.id,
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
+    expect(sessionBeforeReset?.revokedAt).not.toBeNull();
+  });
+
+  it("rejects reuse of an already-used reset token", async () => {
+    await registerTestUser(app);
+    const user = await app.prisma.user.findUniqueOrThrow({
+      where: {
+        login: userData.login,
+      },
+    });
+
+    const { rawToken, tokenHash } = generateResetToken();
+    await app.prisma.passwordResetToken.create({
+      data: {
+        userId: user.id,
+        tokenHash,
+        expiresAt: new Date(Date.now() + 60 * 60 * 1000),
+      },
+    });
+
+    await app.inject({
+      method: "POST",
+      url: endpoints.resetPassword,
+      payload: {
+        token: rawToken,
+        newPassword: "newPassword_1",
+      },
+    });
+
+    const secondAttempt = await app.inject({
+      method: "POST",
+      url: endpoints.resetPassword,
+      payload: {
+        token: rawToken,
+        newPassword: "newPassword_2",
+      },
+    });
+
+    expect(secondAttempt.statusCode).toBe(401);
   });
 });
