@@ -1,0 +1,94 @@
+@use "mixins/fluid" as *;
+
+// Брейкпойнты
+$xs: 375px;
+$sm: 576px;
+$md: 768px;
+$lg: 992px;
+$xl: 1200px;
+$xxl: 1400px;
+
+:root {
+  // Палитра
+  // * примитивы
+  --cl-white: #fff;
+  --cl-black: #000;
+
+  // ** paper
+  --cl-paper-50: #f6f4ef;
+  --cl-paper-200: #e2ded5;
+
+  // ** ink
+  --cl-ink-400: #8a9399;
+  --cl-ink-600: #5a6870;
+  --cl-ink-900: #17232a;
+
+  // ** petrol - brand
+  --cl-petrol-100: #e1ecef;
+  --cl-petrol-200: #cfe0e5;
+  --cl-petrol-500: #1b87a6;
+  --cl-petrol-700: #0e5f76;
+  --cl-petrol-800: #0a4a5d;
+
+  // ** statuses
+  --cl-green-600: #2a7a3e;
+  --cl-amber-700: #a35c0a;
+  --cl-red-600: #c2362f;
+
+  // * семантика
+  --cl-background: var(--cl-paper-50);
+  --cl-surface: var(--cl-white);
+  --cl-border: var(--cl-paper-200);
+  --cl-border-strong: var(--cl-ink-400);
+  --cl-border-focus: var(--cl-petrol-500);
+  --cl-primary: var(--cl-petrol-700);
+  --cl-primary-hover: var(--cl-petrol-800);
+  --cl-on-primary: var(--cl-white);
+  --cl-secondary: var(--cl-petrol-100);
+  --cl-secondary-hover: var(--cl-petrol-200);
+  --cl-text: var(--cl-ink-900);
+  --cl-text-secondary: var(--cl-ink-600);
+  --cl-success: var(--cl-green-600);
+  --cl-warning: var(--cl-amber-700);
+  --cl-error: var(--cl-red-600);
+  --cl-overlay: #{rgba(15, 18, 24, 0.45)};
+  --cl-shadow: #{rgba(16, 24, 40, 0.08)};
+
+  // Скругления
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+  --radius-full: 50%;
+
+  // Типографика
+  --font-family: var(--font-manrope), helvetica, sans-serif;
+  --font-weight: 400;
+  --line-height: 150%;
+  --paragraph-spacing: 16px;
+  --list-spacing: 12px;
+  --font-size-sm: #{fluid(14, 16)};
+  --font-size: #{fluid(16, 18)};
+  --font-size-lg: #{fluid(18, 20)};
+  --font-size-xl: #{fluid(20, 24)};
+
+  // Размеры
+  // * шаг модульной сетки
+  --step: 4px;
+
+  // * отступы
+  --space-1: var(--step);
+  --space-2: calc(var(--step) * 2);
+  --space-3: calc(var(--step) * 3);
+  --space-4: calc(var(--step) * 4);
+
+  // * контейнер
+  --body-min-width: 320px;
+  --container-max-width: 1280px;
+  --container-padding: 20px;
+
+  // Переходы
+  --transition-fast: 0.1s ease;
+  --transition-base: 0.3s ease;
+  --transition-slow: 0.5s ease;
+}

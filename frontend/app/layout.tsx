@@ -1,14 +1,22 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import "@/shared/styles/globals.scss";
+
+import { Manrope } from "next/font/google";
 
 export const metadata: Metadata = {
   title: "LJ Reborn",
   description: "Блог в духе ЖЖ",
 };
 
+const manrope = Manrope({
+  subsets: ["latin", "cyrillic"],
+  variable: "--font-manrope",
+  display: "swap",
+});
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="ru">
+    <html lang="ru" className={manrope.variable}>
       <body>{children}</body>
     </html>
   );

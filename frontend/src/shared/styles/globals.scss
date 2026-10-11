@@ -1,0 +1,8 @@
+@use "reset";
+@use "tokens";
+
+body {
+  color: var(--cl-text);
+  font-family: var(--font-family);
+  background: var(--cl-background);
+}
