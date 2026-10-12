@@ -20,19 +20,28 @@ $xxl: 1400px;
 
   // ** ink
   --cl-ink-400: #8a9399;
+  --cl-ink-500: #6f7d85;
   --cl-ink-600: #5a6870;
+  --cl-ink-800: #26343b;
   --cl-ink-900: #17232a;
 
   // ** petrol - brand
   --cl-petrol-100: #e1ecef;
   --cl-petrol-200: #cfe0e5;
+  --cl-petrol-300: #8ccbdd;
+  --cl-petrol-400: #5fb3cc;
   --cl-petrol-500: #1b87a6;
   --cl-petrol-700: #0e5f76;
   --cl-petrol-800: #0a4a5d;
+  --cl-petrol-900: #153d49;
+  --cl-petrol-950: #10303a;
 
   // ** statuses
+  --cl-green-400: #5dbb74;
   --cl-green-600: #2a7a3e;
+  --cl-amber-400: #e0a04a;
   --cl-amber-700: #a35c0a;
+  --cl-red-400: #ef7a72;
   --cl-red-600: #c2362f;
 
   // * семантика
@@ -91,4 +100,26 @@ $xxl: 1400px;
   --transition-fast: 0.1s ease;
   --transition-base: 0.3s ease;
   --transition-slow: 0.5s ease;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --cl-background: var(--cl-ink-950);
+  --cl-surface: var(--cl-ink-900);
+  --cl-border: var(--cl-ink-800);
+  --cl-border-strong: var(--cl-ink-500);
+  --cl-border-focus: var(--cl-petrol-400);
+  --cl-primary: var(--cl-petrol-400);
+  --cl-primary-hover: var(--cl-petrol-300);
+  --cl-on-primary: var(--cl-ink-950);
+  --cl-secondary: var(--cl-petrol-950);
+  --cl-secondary-hover: var(--cl-petrol-900);
+  --cl-text: var(--cl-paper-200);
+  --cl-text-secondary: var(--cl-ink-400);
+  --cl-success: var(--cl-green-400);
+  --cl-warning: var(--cl-amber-400);
+  --cl-error: var(--cl-red-400);
+  --cl-overlay: #{rgba(0, 0, 0, 0.6)};
+  --cl-shadow: #{rgba(0, 0, 0, 0.4)};
 }

@@ -21,4 +21,10 @@ export default defineConfig([
     "**/node_modules/", // игнорируется по умолчанию, но явный список не помешает
   ]),
   eslintConfigPrettier,
+  {
+    files: ["frontend/public/**/*.js"],
+    languageOptions: {
+      globals: globals.browser,
+    },
+  },
 ]);

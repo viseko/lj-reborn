@@ -69,7 +69,7 @@
 - [x] 5.1 Next.js App Router: создание проекта в монорепо, базовая структура под Feature-Sliced Design (слои `src/{app,pages,widgets,features,entities,shared}`, роутинг Next.js — `app/` на корне пакета, пустой `pages/` для отличия от легаси Pages Router, по официальному гайду FSD+Next.js)
 - [x] 5.2 SCSS-модули: настройка, соглашения, Stylelint (отложен с модуля 0.4)
 - [x] 5.3 Дизайн-токены: цвета, типографика, spacing — CSS-переменные (брейкпоинты — SCSS-переменные, т.к. custom properties не работают внутри `@media`); CSS reset; шрифт Manrope через `next/font/google`
-- [ ] 5.4 Тёмная/светлая тема: механизм переключения, сохранение выбора
+- [x] 5.4 Тёмная/светлая тема: написано с нуля (`data-theme` на `<html>`, блокирующий скрипт в `public/theme-init.js` против FOUC, Zustand-стор, `suppressHydrationWarning`); позже переделать на `next-themes` для сравнения подходов
 - [ ] 5.5 Кастомные компоненты: `Button`, `Input` с нуля, без нативных стилей браузера + настройка Storybook
 - [ ] 5.6 Стратегия рендеринга по типам страниц: публичные посты/профили — SSG/ISR, лента с подписками и приватные записи — SSR, формы/редактор/DnD — CSR; ревалидация постов on-demand (`revalidatePath`/`revalidateTag` в хендлерах создания/редактирования/удаления)
 
