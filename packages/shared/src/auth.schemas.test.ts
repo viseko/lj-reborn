@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { loginSchema, registerSchema } from "./schemas.js";
+import { loginSchema, registerSchema } from "@lj/shared";
 
 const validUserData = {
   email: "test@example.com",

@@ -1,10 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import {
-  forgotPasswordSchema,
-  loginSchema,
-  registerSchema,
-  resetPasswordSchema,
-} from "./schemas.js";
+import { forgotPasswordSchema, loginSchema, registerSchema, resetPasswordSchema } from "@lj/shared";
 import {
   clearAuthCookies,
   invalidToken,
