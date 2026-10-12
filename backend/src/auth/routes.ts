@@ -266,4 +266,42 @@ export async function authRoutes(app: FastifyInstance) {
       success: true,
     });
   });
+
+  app.get("/me", async (request, reply) => {
+    const token = request.cookies["access_token"];
+
+    // Куки нет - точно не залогинен
+    if (!token) {
+      return unauthorized(reply, "Not authenticated");
+    }
+
+    // Проверяем подпись токена
+    let payload: TokenPayload;
+
+    try {
+      payload = app.jwt.access.verify(token);
+    } catch {
+      return unauthorized(reply, "Not authenticated");
+    }
+
+    // Токен настоящий - ищем юзера по id в поле sub
+    const user = await app.prisma.user.findUnique({
+      where: {
+        id: payload.sub,
+      },
+    });
+
+    if (!user) {
+      return unauthorized(reply, "Not authenticated");
+    }
+
+    // Всё ок
+    return reply.status(200).send({
+      user: {
+        id: user.id,
+        login: user.login,
+        username: user.username,
+      },
+    });
+  });
 }

@@ -16,6 +16,7 @@ const endpoints = {
   logout: "/auth/logout",
   forgotPassword: "/auth/forgot-password",
   resetPassword: "/auth/reset-password",
+  me: "/auth/me",
 } as const;
 
 function registerTestUser(app: ReturnType<typeof buildApp>) {
@@ -295,5 +296,52 @@ describe("forgot password and reset password", () => {
     });
 
     expect(secondAttempt.statusCode).toBe(401);
+  });
+});
+
+describe("GET /auth/me", () => {
+  let app: ReturnType<typeof buildApp>;
+
+  beforeEach(async () => {
+    app = buildApp();
+    await app.ready();
+    await app.prisma.user.deleteMany({});
+  });
+
+  it("returns current user with valid access token", async () => {
+    const registerRes = await registerTestUser(app);
+    const accessToken = registerRes.cookies.find((c) => c.name === "access_token")?.value;
+
+    const response = await app.inject({
+      method: "GET",
+      url: endpoints.me,
+      cookies: {
+        access_token: accessToken!,
+      },
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json().user.login).toBe(userData.login);
+  });
+
+  it("rejects request with invalid access token", async () => {
+    const response = await app.inject({
+      method: "GET",
+      url: endpoints.me,
+      cookies: {
+        access_token: "lol kek cheburek",
+      },
+    });
+
+    expect(response.statusCode).toBe(401);
+  });
+
+  it("rejects reqest without access token", async () => {
+    const response = await app.inject({
+      method: "GET",
+      url: endpoints.me,
+    });
+
+    expect(response.statusCode).toBe(401);
   });
 });
