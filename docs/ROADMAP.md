@@ -70,7 +70,7 @@
 - [x] 5.2 SCSS-модули: настройка, соглашения, Stylelint (отложен с модуля 0.4)
 - [x] 5.3 Дизайн-токены: цвета, типографика, spacing — CSS-переменные (брейкпоинты — SCSS-переменные, т.к. custom properties не работают внутри `@media`); CSS reset; шрифт Manrope через `next/font/google`
 - [x] 5.4 Тёмная/светлая тема: написано с нуля (`data-theme` на `<html>`, блокирующий скрипт в `public/theme-init.js` против FOUC, Zustand-стор, `suppressHydrationWarning`); позже переделать на `next-themes` для сравнения подходов
-- [ ] 5.5 Кастомные компоненты: `Button`, `Input` с нуля, без нативных стилей браузера + настройка Storybook
+- [x] 5.5 Кастомные компоненты: `Button` (варианты, hover/focus-visible/disabled) и `Input` (опциональный `label`, `aria-invalid`/`aria-describedby` для ошибок, `useId` для связки label↔input) на токенах; Storybook настроен (токены/шрифт/обе темы через тулбар)
 - [ ] 5.6 Стратегия рендеринга по типам страниц: публичные посты/профили — SSG/ISR, лента с подписками и приватные записи — SSR, формы/редактор/DnD — CSR; ревалидация постов on-demand (`revalidatePath`/`revalidateTag` в хендлерах создания/редактирования/удаления)
 
 ### 6. Страницы авторизации
