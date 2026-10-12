@@ -5,6 +5,7 @@ coverage/
 playwright-report/
 test-results/
 cheatsheets/
+learning/
 **/src/generated/
 
 .DS_Store
