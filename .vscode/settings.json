@@ -18,5 +18,6 @@
     "source.fixAll.eslint": "explicit",
     "source.fixAll.stylelint": "explicit"
   },
-  "stylelint.validate": ["css", "scss"]
+  "stylelint.validate": ["css", "scss"],
+  "js/ts.tsdk.path": "node_modules\\typescript\\lib"
 }
