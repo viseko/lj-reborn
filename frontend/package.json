@@ -8,10 +8,14 @@
     "start": "next start",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "test": "vitest run"
+    "test": "vitest run",
+    "lint:scss": "stylelint \"src/**/*.scss\"",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@lj/shared": "workspace:*",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.56.0",
     "next": "16.4.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",

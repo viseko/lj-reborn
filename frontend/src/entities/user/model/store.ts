@@ -1,4 +1,4 @@
-import { apiFetch } from "../../../shared/api/clients";
+import { apiFetch } from "@/shared/api/clients";
 import { create } from "zustand";
 
 type User = {

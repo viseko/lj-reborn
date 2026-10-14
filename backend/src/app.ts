@@ -78,7 +78,7 @@ export function buildApp() {
       return reply.status(409).send({
         error: {
           code: "CONFLICT",
-          message: "Login or email already exists",
+          message: "Такой логин/email уже заняты",
         },
       });
     }

@@ -6,6 +6,7 @@ export default function Home() {
       <h1>LJ Reborn</h1>
       <p>Скоро здесь будет лента</p>
       <ThemeSwitcher />
+      <a href="/register">Регистрация</a>
     </>
   );
 }

@@ -39,3 +39,10 @@ export const Disabled: Story = {
     disabled: true,
   },
 };
+
+export const Password: Story = {
+  args: {
+    label: "Пароль",
+    type: "password",
+  },
+};
