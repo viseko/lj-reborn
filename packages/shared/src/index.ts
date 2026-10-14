@@ -17,9 +17,9 @@ export const registerSchema = z.object({
 });
 
 // Берём только нужные поля из схемы регистрации
-export const loginSchema = registerSchema.pick({
-  login: true,
-  password: true,
+export const loginSchema = z.object({
+  login: z.string().min(1, "Введите логин"),
+  password: z.string().min(1, "Введите пароль"),
 });
 
 export const forgotPasswordSchema = z.object({

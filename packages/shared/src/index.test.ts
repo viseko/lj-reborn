@@ -43,19 +43,19 @@ describe("register test", () => {
 });
 
 describe("login test", () => {
-  it("bad login", () => {
+  it("empty login", () => {
     const result = loginSchema.safeParse({
-      login: "7",
+      login: "",
       password: validUserData.password,
     });
 
     expect(result.success).toBe(false);
   });
 
-  it("bad password", () => {
+  it("empty password", () => {
     const result = loginSchema.safeParse({
       login: validUserData.login,
-      password: ":)",
+      password: "",
     });
 
     expect(result.success).toBe(false);

@@ -61,7 +61,7 @@ export async function authRoutes(app: FastifyInstance) {
       return reply.status(401).send({
         error: {
           code: "INVALID_CREDENTIALS",
-          message: "Invalid login or password",
+          message: "Логин или пароль не подходят",
         },
       });
     }
