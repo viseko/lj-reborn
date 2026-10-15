@@ -80,7 +80,7 @@
 - [x] 6.3 Auth Zustand-стор (`entities/user`): состояние пользователя (не токен — он в httpOnly cookie, стор держит только данные профиля), статус-машина `idle/loading/authenticated/unauthenticated`, actions `login`/`register`/`logout`/`fetchMe`. Потребовало незапланированного дополнения бэкенда — `GET /auth/me` (восстановление сессии при обновлении страницы: JS не может прочитать httpOnly cookie напрямую, нужен эндпоинт, который сам проверит её на сервере и вернёт текущего пользователя)
 - [x] 6.4 Страница регистрации (`features/auth/register-form` + `src/pages/register` + `app/register`): форма на `Input`/`Button`, объектный `useState` под значения полей, клиентская валидация через `registerSchema.safeParse` из `@lj/shared` (+ ручная сверка повтора пароля), ошибки с бэкенда через `ApiError`, редирект через `useRouter` из `next/navigation`. Заодно: `clsx` для условных классов, показ/скрытие пароля в `Input` (`lucide-react`), `noValidate` на форме (своя валидация вместо нативной), русские сообщения в Zod-схемах, фикс алиаса `@/*` в `vitest.config.ts` (`resolve.tsconfigPaths`)
 - [x] 6.5 Страница входа: форма, редирект после успеха
-- [ ] 6.6 Восстановление пароля: `forgot-password` и `reset-password` — два экрана/формы
+- [x] 6.6 Восстановление пароля: `forgot-password` и `reset-password` — два экрана/формы
 - [ ] 6.7 Логаут + защита маршрутов: Next.js middleware, редиректы для авторизованных/неавторизованных
 
 ### 7. E2E и CI/CD

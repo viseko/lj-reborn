@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormHTMLAttributes, type SubmitEvent } from "react";
+import type { FormHTMLAttributes, SubmitEvent } from "react";
 import { useRouter } from "next/navigation";
 
 import { registerSchema } from "@lj/shared";
@@ -29,13 +29,10 @@ const initialValues: FormValues = {
   passwordRepeat: "",
 };
 
-type FormErrors = Partial<Record<keyof FormValues, string>>;
-
 export const RegisterForm = ({ ...props }: FormHTMLAttributes<HTMLFormElement>) => {
-  const { values, handleChange } = useFormState<FormValues>(initialValues);
+  const { values, handleChange, errors, setErrors, submitError, setSubmitError } =
+    useFormState<FormValues>(initialValues);
 
-  const [errors, setErrors] = useState<FormErrors>();
-  const [submitError, setSubmitError] = useState<string | null>(null);
   const register = useUserStore((state) => state.register);
 
   const router = useRouter();

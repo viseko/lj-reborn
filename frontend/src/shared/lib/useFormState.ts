@@ -1,8 +1,10 @@
-import { useState } from "react";
-import type { ChangeEvent } from "react";
+import { useState, type ChangeEvent } from "react";
 
+// Собирает значения полей и ошибки формы
 export function useFormState<T extends Record<string, string>>(initialValues: T) {
   const [values, setValues] = useState<T>(initialValues);
+  const [errors, setErrors] = useState<Partial<Record<keyof T, string>>>();
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -12,5 +14,5 @@ export function useFormState<T extends Record<string, string>>(initialValues: T)
     }));
   };
 
-  return { values, setValues, handleChange };
+  return { values, setValues, handleChange, errors, setErrors, submitError, setSubmitError };
 }

@@ -1,0 +1,90 @@
+"use client";
+
+import { useState } from "react";
+import type { FormHTMLAttributes, SubmitEvent } from "react";
+
+import { forgotPasswordSchema } from "@lj/shared";
+
+import { Input } from "@/shared/ui/Input/Input";
+import { ApiError, apiFetch } from "@/shared/api/clients";
+
+import { useFormState } from "@/shared/lib/useFormState";
+import { FormCard } from "@/shared/ui/FormCard/FormCard";
+import { zodErrorsToFields } from "@/shared/lib/zodErrorsToFields";
+
+type FormValues = {
+  identifier: string;
+};
+
+const initialValues: FormValues = {
+  identifier: "",
+};
+
+export const ForgotForm = ({ ...props }: FormHTMLAttributes<HTMLFormElement>) => {
+  const { values, handleChange, errors, setErrors, submitError, setSubmitError } =
+    useFormState<FormValues>(initialValues);
+  const [isSent, setIsSent] = useState(false);
+
+  const handleSubmit = async (event: SubmitEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    setSubmitError(null);
+
+    const result = forgotPasswordSchema.safeParse(values);
+    if (!result.success) {
+      setErrors(zodErrorsToFields<FormValues>(result.error));
+      return;
+    }
+
+    setErrors({});
+
+    try {
+      await apiFetch<{ message: string }>("/auth/forgot-password", {
+        method: "POST",
+        body: {
+          identifier: values.identifier,
+        },
+      });
+
+      setIsSent(true);
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setSubmitError(err.message);
+      }
+    }
+  };
+
+  const formFooter = isSent ? (
+    <a href="/login">Вернуться ко входу</a>
+  ) : (
+    <>
+      <a href="/register">Зарегистрироваться</a>
+      <a href="/login">Вспомнили пароль? Войти</a>
+    </>
+  );
+
+  return (
+    <FormCard
+      title="Восстановление пароля"
+      submitLabel={isSent ? null : "Восстановить"}
+      submitError={submitError}
+      onSubmit={handleSubmit}
+      footer={formFooter}
+      {...props}
+    >
+      {isSent ? (
+        <p>Если такой email зарегистрирован, на&nbsp;него отправлена ссылка для сброса пароля.</p>
+      ) : (
+        <Input
+          type="text"
+          name="identifier"
+          placeholder="Логин или email"
+          value={values.identifier}
+          error={errors?.identifier}
+          onChange={handleChange}
+          required
+        />
+      )}
+    </FormCard>
+  );
+};

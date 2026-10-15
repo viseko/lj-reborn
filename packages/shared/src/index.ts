@@ -2,6 +2,7 @@ import z from "zod";
 
 export const passwordSchema = z
   .string()
+  .min(1, "Введите пароль")
   .min(8, "Пароль должен быть не короче 8 символов")
   .max(128, "Пароль слишком длинный");
 
