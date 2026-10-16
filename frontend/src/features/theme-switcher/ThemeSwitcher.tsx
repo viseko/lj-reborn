@@ -1,19 +1,30 @@
 "use client";
 
+import styles from "./ThemeSwitcher.module.scss";
+
 import { useThemeStore } from "@/shared/theme/store";
-import { useEffect, useState } from "react";
+import clsx from "clsx";
+import { Moon, Sun } from "lucide-react";
+import { useShallow } from "zustand/shallow";
 
 export function ThemeSwitcher() {
-  const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useThemeStore();
-
-  useEffect(() => setMounted(true), []);
-
-  if (!mounted) return null;
+  const { theme, setTheme } = useThemeStore(
+    useShallow((state) => ({ theme: state.theme, setTheme: state.setTheme })),
+  );
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
   };
 
-  return <button onClick={toggleTheme}>{theme === "dark" ? "🌙" : "☀️"}</button>;
+  return (
+    <button
+      type="button"
+      className={styles.button}
+      onClick={toggleTheme}
+      aria-label="Переключить тему"
+    >
+      <Sun className={clsx(styles.icon, styles.sun)} width={24} height={24} aria-hidden />
+      <Moon className={clsx(styles.icon, styles.moon)} width={24} height={24} aria-hidden />
+    </button>
+  );
 }

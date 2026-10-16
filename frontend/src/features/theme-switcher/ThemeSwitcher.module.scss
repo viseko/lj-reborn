@@ -1,0 +1,59 @@
+.button {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  color: var(--cl-text);
+  background: var(--cl-surface);
+  border: 1px solid var(--cl-border);
+  border-radius: var(--radius-sm);
+  transition:
+    background-color var(--transition-base),
+    transform var(--transition-fast);
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--cl-border-focus);
+    outline-offset: 2px;
+  }
+
+  &:hover {
+    background-color: var(--cl-surface-hover);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+// обе иконки в одной ячейке грида — лежат друг на друге
+.icon {
+  grid-area: 1 / 1;
+  transition:
+    transform var(--transition-slow),
+    opacity var(--transition-slow);
+}
+
+// по умолчанию (светлая): солнце видно, луна спрятана
+.moon {
+  opacity: 0;
+  transform: rotate(-30deg) scale(0.5);
+}
+
+:global([data-theme="dark"]) {
+  .sun {
+    opacity: 0;
+    transform: rotate(90deg) scale(0.5);
+  }
+
+  .moon {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .icon {
+    transition: none;
+  }
+}
