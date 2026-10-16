@@ -48,6 +48,7 @@ $xxl: 1400px;
   // * семантика
   --cl-background: var(--cl-paper-50);
   --cl-surface: var(--cl-white);
+  --cl-surface-hover: var(--cl-paper-50);
   --cl-border: var(--cl-paper-200);
   --cl-border-strong: var(--cl-ink-400);
   --cl-border-focus: var(--cl-petrol-500);
@@ -109,6 +110,7 @@ $xxl: 1400px;
 
   --cl-background: var(--cl-ink-950);
   --cl-surface: var(--cl-ink-900);
+  --cl-surface-hover: var(--cl-ink-950);
   --cl-border: var(--cl-ink-800);
   --cl-border-strong: var(--cl-ink-500);
   --cl-border-focus: var(--cl-petrol-400);
