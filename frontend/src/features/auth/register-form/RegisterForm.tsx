@@ -7,7 +7,7 @@ import { registerSchema } from "@lj/shared";
 
 import { Input } from "@/shared/ui/Input/Input";
 import { ApiError } from "@/shared/api/clients";
-import { useUserStore } from "@/entities/user/model/store";
+import { useUserStore } from "@/entities/user";
 
 import { useFormState } from "@/shared/lib/useFormState";
 import { FormCard } from "@/shared/ui/FormCard/FormCard";
