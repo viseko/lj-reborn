@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "@/shared/styles/globals.scss";
 
 import { Manrope } from "next/font/google";
+import { SessionInit } from "@/entities/user";
+import { Header } from "@/widgets/header";
 
 export const metadata: Metadata = {
   title: "LJ Reborn",
@@ -20,7 +22,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <script src="/theme-init.js"></script>
       </head>
-      <body>{children}</body>
+      <body>
+        <SessionInit />
+        <div className="page">
+          <Header />
+          <main className="page-main">{children}</main>
+        </div>
+      </body>
     </html>
   );
 }
