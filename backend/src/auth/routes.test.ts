@@ -169,6 +169,39 @@ describe("auth routes", () => {
     expect(logoutRes.cookies.find((c) => c.name === "access_token")?.maxAge).toBe(0);
     expect(logoutRes.cookies.find((c) => c.name === "refresh_token")?.maxAge).toBe(0);
   });
+
+  it("puts login into access token on login", async () => {
+    await registerTestUser(app);
+
+    const loginRes = await loginTestUser(app);
+    const accessToken = loginRes.cookies.find((c) => c.name === "access_token")!.value;
+
+    const payload = app.jwt.access.verify<{ login: string }>(accessToken);
+    expect(payload.login).toBe(userData.login);
+  });
+
+  it("keeps login in access token after refresh", async () => {
+    await registerTestUser(app);
+
+    const loginRes = await loginTestUser(app);
+    const refreshToken = loginRes.cookies.find((c) => c.name === "refresh_token")!.value;
+
+    const refreshRes = await app.inject({
+      method: "POST",
+      url: endpoints.refresh,
+      cookies: {
+        refresh_token: refreshToken,
+      },
+    });
+
+    expect(refreshRes.statusCode).toBe(200);
+
+    // новый access-токен выдан роутом refresh - логин пришёл из базы через include
+    const newAccessToken = refreshRes.cookies.find((c) => c.name === "access_token")!.value;
+    const payload = app.jwt.access.verify<{ login: string }>(newAccessToken);
+
+    expect(payload.login).toBe(userData.login);
+  });
 });
 
 describe("forgot password and reset password", () => {

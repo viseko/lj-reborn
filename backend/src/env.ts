@@ -12,7 +12,14 @@ const schema = z.object({
   DATABASE_URL: z.string().min(1),
   DATABASE_URL_TEST: z.string().min(1),
   CORS_ORIGIN: z.string().default("http://localhost:3000"),
-  JWT_ACCESS_SECRET: z.string().min(32),
+  JWT_ACCESS_PRIVATE_KEY: z
+    .string()
+    .startsWith("-----BEGIN PRIVATE KEY-----")
+    .endsWith("-----END PRIVATE KEY-----"),
+  JWT_ACCESS_PUBLIC_KEY: z
+    .string()
+    .startsWith("-----BEGIN PUBLIC KEY-----")
+    .endsWith("-----END PUBLIC KEY-----"),
   JWT_REFRESH_SECRET: z.string().min(32),
 });
 

@@ -2,7 +2,7 @@ import type { FastifyInstance, FastifyReply } from "fastify";
 import { env } from "../env.js";
 import { ACCESS_TOKEN_TTL_MINUTES, REFRESH_TOKEN_TTL_DAYS } from "./constants.js";
 
-export async function issueTokenPair(app: FastifyInstance, userId: string) {
+export async function issueTokenPair(app: FastifyInstance, userId: string, login: string) {
   const expiresAt = new Date(Date.now() + REFRESH_TOKEN_TTL_DAYS * 24 * 60 * 60 * 1000);
 
   const refreshTokenRecord = await app.prisma.refreshToken.create({
@@ -14,6 +14,7 @@ export async function issueTokenPair(app: FastifyInstance, userId: string) {
 
   const accessToken = app.jwt.access.sign({
     sub: userId,
+    login,
   });
 
   const refreshToken = app.jwt.refresh.sign({

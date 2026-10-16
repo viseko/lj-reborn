@@ -13,9 +13,14 @@ import { PASSWORD_RESET_TOKEN_TTL_MINUTES } from "./constants.js";
 import { env } from "../env.js";
 import { sendPasswordResetEmail } from "./email.js";
 
-interface TokenPayload {
+interface AccessTokenPayload {
   sub: string;
-  jti?: string;
+  login: string;
+}
+
+interface RefreshTokenPayload {
+  sub: string;
+  jti: string;
 }
 
 export async function authRoutes(app: FastifyInstance) {
@@ -32,7 +37,7 @@ export async function authRoutes(app: FastifyInstance) {
       },
     });
 
-    const { accessToken, refreshToken } = await issueTokenPair(app, user.id);
+    const { accessToken, refreshToken } = await issueTokenPair(app, user.id, user.login);
 
     setAuthCookies(reply, accessToken, refreshToken)
       .status(201)
@@ -66,7 +71,7 @@ export async function authRoutes(app: FastifyInstance) {
       });
     }
 
-    const { accessToken, refreshToken } = await issueTokenPair(app, user.id);
+    const { accessToken, refreshToken } = await issueTokenPair(app, user.id, user.login);
 
     setAuthCookies(reply, accessToken, refreshToken)
       .status(200)
@@ -88,22 +93,27 @@ export async function authRoutes(app: FastifyInstance) {
     }
 
     // 2. Проверяем подпись и срок JWT
-    let payload: TokenPayload;
+    let payload: RefreshTokenPayload;
 
     try {
-      payload = app.jwt.refresh.verify<TokenPayload>(token);
+      payload = app.jwt.refresh.verify<RefreshTokenPayload>(token);
     } catch {
       return unauthorized(reply);
     }
 
     // 3. Ищем запись в базе по jti
-    const tokenRecord = payload.jti
-      ? await app.prisma.refreshToken.findUnique({
-          where: {
-            id: payload.jti,
+    const tokenRecord = await app.prisma.refreshToken.findUnique({
+      where: {
+        id: payload.jti,
+      },
+      include: {
+        user: {
+          select: {
+            login: true,
           },
-        })
-      : null;
+        },
+      },
+    });
 
     // 4. Разбираем два плохих исхода
     // - "уже отозван" - признак кражи, отзываем все сессии юзера
@@ -142,7 +152,11 @@ export async function authRoutes(app: FastifyInstance) {
       return unauthorized(reply, "Refresh token already used");
     }
 
-    const { accessToken, refreshToken } = await issueTokenPair(app, tokenRecord.userId);
+    const { accessToken, refreshToken } = await issueTokenPair(
+      app,
+      tokenRecord.userId,
+      tokenRecord.user.login,
+    );
 
     setAuthCookies(reply, accessToken, refreshToken).status(200).send({
       success: true,
@@ -154,7 +168,7 @@ export async function authRoutes(app: FastifyInstance) {
 
     if (token) {
       try {
-        const payload = app.jwt.refresh.verify<TokenPayload>(token);
+        const payload = app.jwt.refresh.verify<RefreshTokenPayload>(token);
 
         if (payload.jti) {
           await app.prisma.refreshToken.update({
@@ -276,7 +290,7 @@ export async function authRoutes(app: FastifyInstance) {
     }
 
     // Проверяем подпись токена
-    let payload: TokenPayload;
+    let payload: AccessTokenPayload;
 
     try {
       payload = app.jwt.access.verify(token);

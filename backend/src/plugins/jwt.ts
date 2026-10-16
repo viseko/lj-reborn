@@ -6,8 +6,11 @@ import { ACCESS_TOKEN_TTL_MINUTES, REFRESH_TOKEN_TTL_DAYS } from "../auth/consta
 export default fp(async (fastify) => {
   await fastify.register(jwt, {
     namespace: "access",
-    secret: env.JWT_ACCESS_SECRET,
-    sign: { expiresIn: `${ACCESS_TOKEN_TTL_MINUTES}m` },
+    secret: {
+      private: env.JWT_ACCESS_PRIVATE_KEY,
+      public: env.JWT_ACCESS_PUBLIC_KEY,
+    },
+    sign: { algorithm: "EdDSA", expiresIn: `${ACCESS_TOKEN_TTL_MINUTES}m` },
   });
 
   await fastify.register(jwt, {
