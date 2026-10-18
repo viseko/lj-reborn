@@ -26,11 +26,21 @@ describe("useUserStore", () => {
     expect(useUserStore.getState().status).toBe("authenticated");
   });
 
-  it("sets unauthenticated when fetchMe fails", async () => {
-    mockFetchOnce({ error: { code: "UNAUTHORIZED", message: "Not authenticated" } }, 401);
+  it("initSession returns authenticated status if user exist", async () => {
+    useUserStore.getState().initSession({ login: "tester", id: "user-1" });
+    const user = useUserStore.getState().user;
+    const status = useUserStore.getState().status;
 
-    await useUserStore.getState().fetchMe();
-    expect(useUserStore.getState().user).toBeNull();
-    expect(useUserStore.getState().status).toBe("unauthenticated");
+    expect(user?.login).toBe("tester");
+    expect(status).toBe("authenticated");
+  });
+
+  it("initSession returns unauthenticated status if user not exist", async () => {
+    useUserStore.getState().initSession(null);
+    const user = useUserStore.getState().user;
+    const status = useUserStore.getState().status;
+
+    expect(user).toBeNull();
+    expect(status).toBe("unauthenticated");
   });
 });

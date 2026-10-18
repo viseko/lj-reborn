@@ -1,2 +1,2 @@
-export { SessionInit } from "./ui/SessionInit";
 export { useUserStore } from "./model/store";
+export type { User } from "./model/store";

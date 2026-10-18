@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import "@/shared/styles/globals.scss";
 
 import { Manrope } from "next/font/google";
-import { SessionInit } from "@/entities/user";
 import { Header } from "@/widgets/header";
 
 export const metadata: Metadata = {
@@ -23,7 +22,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <script src="/theme-init.js"></script>
       </head>
       <body>
-        <SessionInit />
         <div className="page">
           <Header />
           <main className="page-main">{children}</main>
