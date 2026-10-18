@@ -1,7 +1,7 @@
 import "server-only";
 
 import { cookies } from "next/headers";
-import { importSPKI, jwtVerify } from "jose";
+import { errors, importSPKI, type JWTPayload, jwtVerify } from "jose";
 
 import { accessTokenPayloadSchema } from "@lj/shared";
 
@@ -18,6 +18,19 @@ function getPublicKey() {
   return keyPromise;
 }
 
+function toSessionUser(payload: JWTPayload) {
+  const result = accessTokenPayloadSchema.safeParse(payload);
+
+  if (!result.success) {
+    return null;
+  }
+
+  return {
+    id: result.data.sub,
+    login: result.data.login,
+  };
+}
+
 export const getSessionUser = async () => {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("access_token")?.value;
@@ -30,17 +43,15 @@ export const getSessionUser = async () => {
     const { payload } = await jwtVerify(accessToken, key, {
       algorithms: ["EdDSA"],
     });
-    const result = accessTokenPayloadSchema.safeParse(payload);
 
-    if (!result.success) {
-      return null;
+    const user = toSessionUser(payload);
+    return user ? { user, expired: false } : null;
+  } catch (error) {
+    if (error instanceof errors.JWTExpired) {
+      const user = toSessionUser(error.payload);
+      return user ? { user, expired: true } : null;
     }
 
-    return {
-      id: result.data.sub,
-      login: result.data.login,
-    };
-  } catch {
     return null;
   }
 };

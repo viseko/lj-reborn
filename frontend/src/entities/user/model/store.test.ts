@@ -44,4 +44,36 @@ describe("useUserStore", () => {
     expect(user).toBeNull();
     expect(status).toBe("unauthenticated");
   });
+
+  it("refreshSession keeps user when refresh succeeds", async () => {
+    useUserStore.getState().initSession({ id: "user-1", login: "tester" });
+    mockFetchOnce({ success: true });
+
+    await useUserStore.getState().refreshSession();
+    const user = useUserStore.getState().user;
+    const status = useUserStore.getState().status;
+
+    expect(user?.login).toBe("tester");
+    expect(status).toBe("authenticated");
+  });
+
+  it("refreshSession clears user when refresh fails", async () => {
+    useUserStore.getState().initSession({ id: "user-1", login: "tester" });
+    mockFetchOnce(
+      {
+        error: {
+          code: "UNAUTHORIZED",
+          message: "...",
+        },
+      },
+      401,
+    );
+
+    await useUserStore.getState().refreshSession();
+    const user = useUserStore.getState().user;
+    const status = useUserStore.getState().status;
+
+    expect(user).toBeNull();
+    expect(status).toBe("unauthenticated");
+  });
 });

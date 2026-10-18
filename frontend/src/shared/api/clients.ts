@@ -40,3 +40,21 @@ export async function apiFetch<T>(
 
   return data as T;
 }
+
+let refreshPromise: Promise<boolean> | null = null;
+
+// Обновляет пару токенов. Параллельные вызовы получают один и тот же запрос:
+// Повторный refresh тем же токеном бекенд сочтёт кражей и отзовёт все сессии
+export function refreshTokens(): Promise<boolean> {
+  refreshPromise ??= fetch(`${API_URL}/auth/refresh`, {
+    method: "POST",
+    credentials: "include",
+  })
+    .then((response) => response.ok)
+    .catch(() => false)
+    .finally(() => {
+      refreshPromise = null;
+    });
+
+  return refreshPromise;
+}

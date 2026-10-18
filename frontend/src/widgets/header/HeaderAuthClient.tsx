@@ -12,21 +12,27 @@ import styles from "./Header.module.scss";
 
 type HeaderAuthClientProps = {
   initialUser: User | null;
+  sessionExpired: boolean;
 };
 
-export const HeaderAuthClient = ({ initialUser }: HeaderAuthClientProps) => {
-  const { user, status, logout, initSession } = useUserStore(
+export const HeaderAuthClient = ({
+  initialUser,
+  sessionExpired,
+}: HeaderAuthClientProps) => {
+  const { user, status, logout, initSession, refreshSession } = useUserStore(
     useShallow((state) => ({
       user: state.user,
       status: state.status,
       logout: state.logout,
       initSession: state.initSession,
+      refreshSession: state.refreshSession,
     })),
   );
 
   useEffect(() => {
     initSession(initialUser);
-  }, [initSession, initialUser]);
+    if (sessionExpired) refreshSession();
+  }, [initSession, initialUser, sessionExpired, refreshSession]);
 
   const currentUser = status === "idle" ? initialUser : user;
 

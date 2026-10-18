@@ -3,7 +3,12 @@ import { getSessionUser } from "@/entities/user/server";
 import { HeaderAuthClient } from "./HeaderAuthClient";
 
 export const HeaderAuth = async () => {
-  const user = await getSessionUser();
+  const session = await getSessionUser();
 
-  return <HeaderAuthClient initialUser={user} />;
+  return (
+    <HeaderAuthClient
+      initialUser={session?.user ?? null}
+      sessionExpired={session?.expired ?? false}
+    />
+  );
 };

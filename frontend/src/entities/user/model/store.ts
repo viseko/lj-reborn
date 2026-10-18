@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import { apiFetch } from "@/shared/api/clients";
+import { apiFetch, refreshTokens } from "@/shared/api/clients";
 
 export type User = {
   id: string;
@@ -21,6 +21,7 @@ type UserStore = {
   }) => Promise<void>;
   logout: () => Promise<void>;
   initSession: (user: User | null) => void;
+  refreshSession: () => Promise<void>;
 };
 
 export const useUserStore = create<UserStore>((set) => ({
@@ -57,5 +58,17 @@ export const useUserStore = create<UserStore>((set) => ({
 
   initSession: (user) => {
     set({ user, status: user ? "authenticated" : "unauthenticated" });
+  },
+
+  refreshSession: async () => {
+    // Разлогиниваем юзера, если не удалось обновить токен
+    const ok = await refreshTokens();
+
+    if (!ok) {
+      set({
+        user: null,
+        status: "unauthenticated",
+      });
+    }
   },
 }));
