@@ -104,6 +104,7 @@ export async function authRoutes(app: FastifyInstance) {
     const token = request.cookies["refresh_token"];
 
     if (!token) {
+      clearAuthCookies(reply);
       return unauthorized(reply);
     }
 
@@ -113,6 +114,7 @@ export async function authRoutes(app: FastifyInstance) {
     try {
       payload = app.jwt.refresh.verify<RefreshTokenPayload>(token);
     } catch {
+      clearAuthCookies(reply);
       return unauthorized(reply);
     }
 
@@ -143,11 +145,13 @@ export async function authRoutes(app: FastifyInstance) {
         },
       });
 
+      clearAuthCookies(reply);
       return unauthorized(reply);
     }
 
     // - нет записи или истекло - отказ, без массового отзыва
     if (!tokenRecord || tokenRecord?.expiresAt < new Date()) {
+      clearAuthCookies(reply);
       return unauthorized(reply);
     }
 

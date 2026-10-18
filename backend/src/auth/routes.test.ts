@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 
 import { buildApp } from "../app.js";
+import { REFRESH_TOKEN_TTL_DAYS } from "./constants.js";
 import { generateResetToken } from "./resetToken.js";
 
 const userData = {
@@ -221,6 +222,45 @@ describe("auth routes", () => {
     const payload = app.jwt.access.verify<{ login: string }>(newAccessToken);
 
     expect(payload.login).toBe(userData.login);
+  });
+
+  it("sets access token cookie lifetime to refresh token lifetime", async () => {
+    await registerTestUser(app);
+
+    const loginRes = await loginTestUser(app);
+    const accessCookie = loginRes.cookies.find(
+      (c) => c.name === "access_token",
+    );
+
+    // Срок жизни куки, а не самого токена
+    expect(accessCookie?.maxAge).toBe(REFRESH_TOKEN_TTL_DAYS * 24 * 60 * 60);
+  });
+
+  it("clears auth cookies when refresh token is invalid", async () => {
+    const refreshRes = await app.inject({
+      method: "POST",
+      url: endpoints.refresh,
+      cookies: {
+        refresh_token: "garbage",
+      },
+    });
+
+    expect(refreshRes.statusCode).toBe(401);
+    expect(
+      refreshRes.cookies.find((c) => c.name === "access_token")?.maxAge,
+    ).toBe(0);
+  });
+
+  it("clears auth cookies when refresh token not exist", async () => {
+    const refreshRes = await app.inject({
+      method: "POST",
+      url: endpoints.refresh,
+    });
+
+    expect(refreshRes.statusCode).toBe(401);
+    expect(
+      refreshRes.cookies.find((c) => c.name === "access_token")?.maxAge,
+    ).toBe(0);
   });
 });
 

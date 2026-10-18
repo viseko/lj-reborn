@@ -1,10 +1,7 @@
 import type { FastifyInstance, FastifyReply } from "fastify";
 
 import { env } from "../env.js";
-import {
-  ACCESS_TOKEN_TTL_MINUTES,
-  REFRESH_TOKEN_TTL_DAYS,
-} from "./constants.js";
+import { REFRESH_TOKEN_TTL_DAYS } from "./constants.js";
 
 export async function issueTokenPair(
   app: FastifyInstance,
@@ -50,7 +47,8 @@ export function setAuthCookies(
       secure: env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: ACCESS_TOKEN_TTL_MINUTES * 60,
+      // Срок жизни куки, но не токена. Нужно для обновления токена без морганий на фронте
+      maxAge: REFRESH_TOKEN_TTL_DAYS * 24 * 60 * 60,
       domain: env.COOKIE_DOMAIN,
     })
     .setCookie("refresh_token", refreshToken, {
