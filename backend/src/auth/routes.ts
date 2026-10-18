@@ -1,5 +1,11 @@
 import type { FastifyInstance } from "fastify";
-import { forgotPasswordSchema, loginSchema, registerSchema, resetPasswordSchema } from "@lj/shared";
+import {
+  forgotPasswordSchema,
+  loginSchema,
+  registerSchema,
+  resetPasswordSchema,
+  type AccessTokenPayload,
+} from "@lj/shared";
 import {
   clearAuthCookies,
   invalidToken,
@@ -12,11 +18,6 @@ import { generateResetToken, hashResetToken } from "./resetToken.js";
 import { PASSWORD_RESET_TOKEN_TTL_MINUTES } from "./constants.js";
 import { env } from "../env.js";
 import { sendPasswordResetEmail } from "./email.js";
-
-interface AccessTokenPayload {
-  sub: string;
-  login: string;
-}
 
 interface RefreshTokenPayload {
   sub: string;

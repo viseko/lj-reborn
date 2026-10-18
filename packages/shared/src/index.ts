@@ -31,3 +31,10 @@ export const resetPasswordSchema = z.object({
   token: z.string().min(1),
   newPassword: passwordSchema,
 });
+
+export type AccessTokenPayload = z.infer<typeof accessTokenPayloadSchema>;
+
+export const accessTokenPayloadSchema = z.object({
+  sub: z.string(),
+  login: z.string(),
+});
