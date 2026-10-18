@@ -82,11 +82,11 @@
 - [x] 6.5 Страница входа: форма, редирект после успеха
 - [x] 6.6 Восстановление пароля: `forgot-password` и `reset-password` — два экрана/формы
 - [x] 6.7 Логаут + защита маршрутов: Next.js middleware, редиректы для авторизованных/неавторизованных
-- [ ] 6.8 Серверный `Header`, по частям:
+- [x] 6.8 Серверный `Header`, по частям:
   - [x] 6.8.1 Асимметричная подпись access-токена (Ed25519/EdDSA вместо HS256): приватный ключ только у бэкенда, фронт получает публичный — проверяет, но не может подделать; `login` в payload (в `/auth/refresh` берётся через `include` + `select`); схема payload в `@lj/shared`
   - [x] 6.8.2 `getSessionUser()` в `entities/user/api` (отдельный серверный вход `entities/user/server.ts` + `server-only`): `cookies()` → `jwtVerify` из `jose` с белым списком алгоритмов → `safeParse` payload; ключ импортируется лениво один раз (`??=` на промисе); нет сессии → `null`, нет ключа → громкая ошибка
   - [x] 6.8.3 Разделение `Header`: `Header` (сервер) → `Suspense` → `HeaderAuth` (сервер, `async`, `getSessionUser()`) → `HeaderAuthClient` (клиент, проп `initialUser`). Первый кадр из пропа, пока стор `idle`; засев стора action'ом `initSession` в `useEffect` (только в браузере — singleton-стор на сервере общий для всех запросов, писать в него при SSR нельзя); `SessionInit` удалён
-  - [ ] 6.8.4 `COOKIE_DOMAIN` для `access_token` на бэкенде (к деплою)
+  - [x] 6.8.4 `COOKIE_DOMAIN` для `access_token` на бэкенде (необязательная env, локально не задаётся — `localhost` не поддерживает `Domain`); тот же `domain` в `clearCookie`, иначе браузер не найдёт cookie для удаления (cookie = имя + домен + путь)
 - [ ] 6.9 Автообновление access-токена: сейчас на фронте нет вызова `/auth/refresh` вообще — через 15 минут (TTL access и его cookie) при перезагрузке пользователь выглядит гостем, хотя refresh действителен 30 дней. Выбрать подход: refresh в Next middleware до рендера (нужна видимость refresh-cookie для фронт-домена) или на клиенте (`apiFetch` на 401 → refresh → повтор)
 
 ### 7. E2E и CI/CD

@@ -23,6 +23,7 @@ const schema = z.object({
     .startsWith("-----BEGIN PUBLIC KEY-----")
     .endsWith("-----END PUBLIC KEY-----"),
   JWT_REFRESH_SECRET: z.string().min(32),
+  COOKIE_DOMAIN: z.string().optional(),
 });
 
 // Парсим и экспортируем значения переменных окружения

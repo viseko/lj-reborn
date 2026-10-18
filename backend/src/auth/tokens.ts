@@ -51,6 +51,7 @@ export function setAuthCookies(
       sameSite: "lax",
       path: "/",
       maxAge: ACCESS_TOKEN_TTL_MINUTES * 60,
+      domain: env.COOKIE_DOMAIN,
     })
     .setCookie("refresh_token", refreshToken, {
       httpOnly: true,
@@ -65,6 +66,7 @@ export function clearAuthCookies(reply: FastifyReply) {
   return reply
     .clearCookie("access_token", {
       path: "/",
+      domain: env.COOKIE_DOMAIN,
     })
     .clearCookie("refresh_token", {
       path: "/auth",
