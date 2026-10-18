@@ -22,10 +22,13 @@ const filePath = toolInput.file_path ?? toolInput.notebook_path;
 if (!filePath) process.exit(0);
 
 const projectDir = process.env.CLAUDE_PROJECT_DIR ?? input.cwd ?? process.cwd();
-const rel = relative(projectDir, resolve(projectDir, filePath)).split(sep).join("/");
+const rel = relative(projectDir, resolve(projectDir, filePath))
+  .split(sep)
+  .join("/");
 
 const allowed =
-  !rel.startsWith("..") && ALLOWED.some((entry) => rel === entry || rel.startsWith(`${entry}/`));
+  !rel.startsWith("..") &&
+  ALLOWED.some((entry) => rel === entry || rel.startsWith(`${entry}/`));
 
 if (allowed) process.exit(0);
 

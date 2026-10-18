@@ -1,11 +1,22 @@
 import type { FastifyInstance } from "fastify";
+
 import {
+  type AccessTokenPayload,
   forgotPasswordSchema,
   loginSchema,
   registerSchema,
   resetPasswordSchema,
-  type AccessTokenPayload,
 } from "@lj/shared";
+
+import { env } from "../env.js";
+import { PASSWORD_RESET_TOKEN_TTL_MINUTES } from "./constants.js";
+import { sendPasswordResetEmail } from "./email.js";
+import {
+  DUMMY_PASSWORD_HASH,
+  hashPassword,
+  verifyPassword,
+} from "./password.js";
+import { generateResetToken, hashResetToken } from "./resetToken.js";
 import {
   clearAuthCookies,
   invalidToken,
@@ -13,11 +24,6 @@ import {
   setAuthCookies,
   unauthorized,
 } from "./tokens.js";
-import { DUMMY_PASSWORD_HASH, hashPassword, verifyPassword } from "./password.js";
-import { generateResetToken, hashResetToken } from "./resetToken.js";
-import { PASSWORD_RESET_TOKEN_TTL_MINUTES } from "./constants.js";
-import { env } from "../env.js";
-import { sendPasswordResetEmail } from "./email.js";
 
 interface RefreshTokenPayload {
   sub: string;
@@ -38,7 +44,11 @@ export async function authRoutes(app: FastifyInstance) {
       },
     });
 
-    const { accessToken, refreshToken } = await issueTokenPair(app, user.id, user.login);
+    const { accessToken, refreshToken } = await issueTokenPair(
+      app,
+      user.id,
+      user.login,
+    );
 
     setAuthCookies(reply, accessToken, refreshToken)
       .status(201)
@@ -72,7 +82,11 @@ export async function authRoutes(app: FastifyInstance) {
       });
     }
 
-    const { accessToken, refreshToken } = await issueTokenPair(app, user.id, user.login);
+    const { accessToken, refreshToken } = await issueTokenPair(
+      app,
+      user.id,
+      user.login,
+    );
 
     setAuthCookies(reply, accessToken, refreshToken)
       .status(200)
@@ -210,7 +224,9 @@ export async function authRoutes(app: FastifyInstance) {
 
     if (user) {
       const { rawToken, tokenHash } = generateResetToken();
-      const expiresAt = new Date(Date.now() + PASSWORD_RESET_TOKEN_TTL_MINUTES * 60 * 1000);
+      const expiresAt = new Date(
+        Date.now() + PASSWORD_RESET_TOKEN_TTL_MINUTES * 60 * 1000,
+      );
 
       await app.prisma.passwordResetToken.create({
         data: {
@@ -226,7 +242,8 @@ export async function authRoutes(app: FastifyInstance) {
     }
 
     return reply.status(200).send({
-      message: "If an account with that email or login exists, a reset link has been sent.",
+      message:
+        "If an account with that email or login exists, a reset link has been sent.",
     });
   });
 
@@ -238,7 +255,11 @@ export async function authRoutes(app: FastifyInstance) {
       where: { tokenHash },
     });
 
-    if (!tokenRecord || tokenRecord.usedAt || tokenRecord.expiresAt < new Date()) {
+    if (
+      !tokenRecord ||
+      tokenRecord.usedAt ||
+      tokenRecord.expiresAt < new Date()
+    ) {
       return invalidToken(reply);
     }
 

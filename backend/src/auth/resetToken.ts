@@ -1,4 +1,4 @@
-import { randomBytes, createHash } from "node:crypto";
+import { createHash, randomBytes } from "node:crypto";
 
 export function generateResetToken() {
   const rawToken = randomBytes(32).toString("hex");

@@ -1,4 +1,5 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
+
 import { buildApp } from "../app.js";
 import { cleanupExpiredTokens } from "./cleanup.js";
 
@@ -40,7 +41,11 @@ describe("cleanupExpiredTokens", () => {
     const result = await cleanupExpiredTokens(app);
     expect(result.refreshDeleted).toBe(1);
 
-    expect(await app.prisma.refreshToken.findUnique({ where: { id: old.id } })).toBeNull();
-    expect(await app.prisma.refreshToken.findUnique({ where: { id: fresh.id } })).not.toBeNull();
+    expect(
+      await app.prisma.refreshToken.findUnique({ where: { id: old.id } }),
+    ).toBeNull();
+    expect(
+      await app.prisma.refreshToken.findUnique({ where: { id: fresh.id } }),
+    ).not.toBeNull();
   });
 });

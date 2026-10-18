@@ -1,4 +1,5 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
+
 import { buildApp } from "../app.js";
 import { generateResetToken } from "./resetToken.js";
 
@@ -27,7 +28,10 @@ function registerTestUser(app: ReturnType<typeof buildApp>) {
   });
 }
 
-function loginTestUser(app: ReturnType<typeof buildApp>, password: string = userData.password) {
+function loginTestUser(
+  app: ReturnType<typeof buildApp>,
+  password: string = userData.password,
+) {
   return app.inject({
     method: "POST",
     url: endpoints.login,
@@ -109,7 +113,9 @@ describe("auth routes", () => {
 
     const loginRes = await loginTestUser(app);
 
-    const oldRefresh = loginRes.cookies.find((c) => c.name === "refresh_token")!.value;
+    const oldRefresh = loginRes.cookies.find(
+      (c) => c.name === "refresh_token",
+    )!.value;
 
     const refreshRes = await app.inject({
       method: "POST",
@@ -120,7 +126,9 @@ describe("auth routes", () => {
     });
     expect(refreshRes.statusCode).toBe(200);
 
-    const newRefresh = refreshRes.cookies.find((c) => c.name === "refresh_token")!.value;
+    const newRefresh = refreshRes.cookies.find(
+      (c) => c.name === "refresh_token",
+    )!.value;
 
     expect(newRefresh).not.toBe(oldRefresh);
 
@@ -155,7 +163,9 @@ describe("auth routes", () => {
       },
     });
 
-    const refreshCookie = logingRes.cookies.find((c) => c.name === "refresh_token")!.value;
+    const refreshCookie = logingRes.cookies.find(
+      (c) => c.name === "refresh_token",
+    )!.value;
 
     const logoutRes = await app.inject({
       method: "POST",
@@ -166,15 +176,21 @@ describe("auth routes", () => {
     });
 
     expect(logoutRes.statusCode).toBe(200);
-    expect(logoutRes.cookies.find((c) => c.name === "access_token")?.maxAge).toBe(0);
-    expect(logoutRes.cookies.find((c) => c.name === "refresh_token")?.maxAge).toBe(0);
+    expect(
+      logoutRes.cookies.find((c) => c.name === "access_token")?.maxAge,
+    ).toBe(0);
+    expect(
+      logoutRes.cookies.find((c) => c.name === "refresh_token")?.maxAge,
+    ).toBe(0);
   });
 
   it("puts login into access token on login", async () => {
     await registerTestUser(app);
 
     const loginRes = await loginTestUser(app);
-    const accessToken = loginRes.cookies.find((c) => c.name === "access_token")!.value;
+    const accessToken = loginRes.cookies.find(
+      (c) => c.name === "access_token",
+    )!.value;
 
     const payload = app.jwt.access.verify<{ login: string }>(accessToken);
     expect(payload.login).toBe(userData.login);
@@ -184,7 +200,9 @@ describe("auth routes", () => {
     await registerTestUser(app);
 
     const loginRes = await loginTestUser(app);
-    const refreshToken = loginRes.cookies.find((c) => c.name === "refresh_token")!.value;
+    const refreshToken = loginRes.cookies.find(
+      (c) => c.name === "refresh_token",
+    )!.value;
 
     const refreshRes = await app.inject({
       method: "POST",
@@ -197,7 +215,9 @@ describe("auth routes", () => {
     expect(refreshRes.statusCode).toBe(200);
 
     // новый access-токен выдан роутом refresh - логин пришёл из базы через include
-    const newAccessToken = refreshRes.cookies.find((c) => c.name === "access_token")!.value;
+    const newAccessToken = refreshRes.cookies.find(
+      (c) => c.name === "access_token",
+    )!.value;
     const payload = app.jwt.access.verify<{ login: string }>(newAccessToken);
 
     expect(payload.login).toBe(userData.login);
@@ -343,7 +363,9 @@ describe("GET /auth/me", () => {
 
   it("returns current user with valid access token", async () => {
     const registerRes = await registerTestUser(app);
-    const accessToken = registerRes.cookies.find((c) => c.name === "access_token")?.value;
+    const accessToken = registerRes.cookies.find(
+      (c) => c.name === "access_token",
+    )?.value;
 
     const response = await app.inject({
       method: "GET",

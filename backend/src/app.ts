@@ -1,17 +1,17 @@
 // Cобирает приложение: создаёт инстанс Fastify, регистрирует плагины и маршруты.
 // Экспортирует готовое приложение, но не запускает его слушать сеть.
 
-import Fastify from "fastify";
-import { env } from "./env.js";
-import prismaPlugin from "./plugins/prisma.js";
-import jwtPlugin from "./plugins/jwt.js";
-import cleanupPlugin from "./plugins/cleanup.js";
-import cors from "@fastify/cors";
 import cookie from "@fastify/cookie";
-import { authRoutes } from "./auth/routes.js";
-
+import cors from "@fastify/cors";
+import Fastify from "fastify";
 import { ZodError } from "zod";
+
+import { authRoutes } from "./auth/routes.js";
+import { env } from "./env.js";
 import { Prisma } from "./generated/prisma/client.js";
+import cleanupPlugin from "./plugins/cleanup.js";
+import jwtPlugin from "./plugins/jwt.js";
+import prismaPlugin from "./plugins/prisma.js";
 
 export function buildApp() {
   // Инициализация
@@ -74,7 +74,10 @@ export function buildApp() {
     }
 
     // * ловим ошибки записи в БД
-    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
       return reply.status(409).send({
         error: {
           code: "CONFLICT",
@@ -85,7 +88,9 @@ export function buildApp() {
 
     // * ловим общие ошибки
     const statusCode =
-      error instanceof Error && "statusCode" in error && typeof error.statusCode === "number"
+      error instanceof Error &&
+      "statusCode" in error &&
+      typeof error.statusCode === "number"
         ? error.statusCode
         : undefined;
 

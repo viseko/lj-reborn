@@ -5,13 +5,12 @@ import { useRouter } from "next/navigation";
 
 import { loginSchema } from "@lj/shared";
 
-import { Input } from "@/shared/ui/Input/Input";
-import { ApiError } from "@/shared/api/clients";
 import { useUserStore } from "@/entities/user";
-
+import { ApiError } from "@/shared/api/clients";
 import { useFormState } from "@/shared/lib/useFormState";
-import { FormCard } from "@/shared/ui/FormCard/FormCard";
 import { zodErrorsToFields } from "@/shared/lib/zodErrorsToFields";
+import { FormCard } from "@/shared/ui/FormCard/FormCard";
+import { Input } from "@/shared/ui/Input/Input";
 
 type FormValues = {
   login: string;
@@ -23,9 +22,17 @@ const initialValues: FormValues = {
   password: "",
 };
 
-export const LoginForm = ({ ...props }: FormHTMLAttributes<HTMLFormElement>) => {
-  const { values, handleChange, errors, setErrors, submitError, setSubmitError } =
-    useFormState<FormValues>(initialValues);
+export const LoginForm = ({
+  ...props
+}: FormHTMLAttributes<HTMLFormElement>) => {
+  const {
+    values,
+    handleChange,
+    errors,
+    setErrors,
+    submitError,
+    setSubmitError,
+  } = useFormState<FormValues>(initialValues);
   const login = useUserStore((state) => state.login);
   const router = useRouter();
 

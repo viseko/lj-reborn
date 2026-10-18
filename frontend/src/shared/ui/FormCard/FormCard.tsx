@@ -1,6 +1,8 @@
-import styles from "./FormCard.module.scss";
 import type { FormHTMLAttributes, ReactNode } from "react";
+
 import { Button } from "@/shared/ui/Button/Button";
+
+import styles from "./FormCard.module.scss";
 
 type FormCardProps = {
   title: string;
@@ -19,12 +21,19 @@ export const FormCard = ({
   ...props
 }: FormCardProps) => {
   return (
-    <form className={styles.form} noValidate {...props}>
+    <form
+      className={styles.form}
+      noValidate
+      {...props}
+    >
       <div className={styles.title}>{title}</div>
       <div className={styles.rows}>{children}</div>
       {submitError && <p className={styles.submitError}>{submitError}</p>}
       {submitLabel && (
-        <Button type="submit" variant="primary">
+        <Button
+          type="submit"
+          variant="primary"
+        >
           {submitLabel}
         </Button>
       )}

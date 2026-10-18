@@ -1,4 +1,5 @@
 import { getSessionUser } from "@/entities/user/server";
+
 import { HeaderAuthClient } from "./HeaderAuthClient";
 
 export const HeaderAuth = async () => {

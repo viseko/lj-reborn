@@ -1,16 +1,15 @@
 "use client";
 
-import { useState } from "react";
 import type { FormHTMLAttributes, SubmitEvent } from "react";
+import { useState } from "react";
 
 import { forgotPasswordSchema } from "@lj/shared";
 
-import { Input } from "@/shared/ui/Input/Input";
 import { ApiError, apiFetch } from "@/shared/api/clients";
-
 import { useFormState } from "@/shared/lib/useFormState";
-import { FormCard } from "@/shared/ui/FormCard/FormCard";
 import { zodErrorsToFields } from "@/shared/lib/zodErrorsToFields";
+import { FormCard } from "@/shared/ui/FormCard/FormCard";
+import { Input } from "@/shared/ui/Input/Input";
 
 type FormValues = {
   identifier: string;
@@ -20,9 +19,17 @@ const initialValues: FormValues = {
   identifier: "",
 };
 
-export const ForgotForm = ({ ...props }: FormHTMLAttributes<HTMLFormElement>) => {
-  const { values, handleChange, errors, setErrors, submitError, setSubmitError } =
-    useFormState<FormValues>(initialValues);
+export const ForgotForm = ({
+  ...props
+}: FormHTMLAttributes<HTMLFormElement>) => {
+  const {
+    values,
+    handleChange,
+    errors,
+    setErrors,
+    submitError,
+    setSubmitError,
+  } = useFormState<FormValues>(initialValues);
   const [isSent, setIsSent] = useState(false);
 
   const handleSubmit = async (event: SubmitEvent<HTMLFormElement>) => {
@@ -73,7 +80,10 @@ export const ForgotForm = ({ ...props }: FormHTMLAttributes<HTMLFormElement>) =>
       {...props}
     >
       {isSent ? (
-        <p>Если такой email зарегистрирован, на&nbsp;него отправлена ссылка для сброса пароля.</p>
+        <p>
+          Если такой email зарегистрирован, на&nbsp;него отправлена ссылка для
+          сброса пароля.
+        </p>
       ) : (
         <Input
           type="text"

@@ -1,5 +1,6 @@
-import "../src/shared/styles/globals.scss";
 import type { Decorator, Preview } from "@storybook/nextjs-vite";
+
+import "../src/shared/styles/globals.scss";
 
 export const globalTypes = {
   theme: {

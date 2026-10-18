@@ -6,12 +6,11 @@ import { useRouter } from "next/navigation";
 
 import { resetPasswordSchema } from "@lj/shared";
 
-import { Input } from "@/shared/ui/Input/Input";
 import { ApiError, apiFetch } from "@/shared/api/clients";
-
 import { useFormState } from "@/shared/lib/useFormState";
-import { FormCard } from "@/shared/ui/FormCard/FormCard";
 import { zodErrorsToFields } from "@/shared/lib/zodErrorsToFields";
+import { FormCard } from "@/shared/ui/FormCard/FormCard";
+import { Input } from "@/shared/ui/Input/Input";
 
 type FormValues = {
   newPassword: string;
@@ -23,9 +22,17 @@ const initialValues: FormValues = {
   newPasswordRepeat: "",
 };
 
-export const ResetPasswordForm = ({ ...props }: FormHTMLAttributes<HTMLFormElement>) => {
-  const { values, handleChange, errors, setErrors, submitError, setSubmitError } =
-    useFormState<FormValues>(initialValues);
+export const ResetPasswordForm = ({
+  ...props
+}: FormHTMLAttributes<HTMLFormElement>) => {
+  const {
+    values,
+    handleChange,
+    errors,
+    setErrors,
+    submitError,
+    setSubmitError,
+  } = useFormState<FormValues>(initialValues);
 
   const searchParams = useSearchParams();
   const token = searchParams?.get("token");
@@ -39,7 +46,9 @@ export const ResetPasswordForm = ({ ...props }: FormHTMLAttributes<HTMLFormEleme
     const result = resetPasswordSchema.safeParse({ ...values, token });
     const passwordMistmatch = values.newPassword !== values.newPasswordRepeat;
 
-    const fieldErrors = result.success ? {} : zodErrorsToFields<FormValues>(result.error);
+    const fieldErrors = result.success
+      ? {}
+      : zodErrorsToFields<FormValues>(result.error);
 
     if (passwordMistmatch) {
       fieldErrors.newPasswordRepeat = "Пароли не совпадают";

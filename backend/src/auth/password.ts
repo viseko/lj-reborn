@@ -4,9 +4,14 @@ export async function hashPassword(password: string): Promise<string> {
   return argon2.hash(password);
 }
 
-export async function verifyPassword(hash: string, password: string): Promise<boolean> {
+export async function verifyPassword(
+  hash: string,
+  password: string,
+): Promise<boolean> {
   return argon2.verify(hash, password);
 }
 
 // Константа для защиты от timing attack
-export const DUMMY_PASSWORD_HASH = await hashPassword("dummy-password-for-timing-safety");
+export const DUMMY_PASSWORD_HASH = await hashPassword(
+  "dummy-password-for-timing-safety",
+);

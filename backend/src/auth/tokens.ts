@@ -1,9 +1,19 @@
 import type { FastifyInstance, FastifyReply } from "fastify";
-import { env } from "../env.js";
-import { ACCESS_TOKEN_TTL_MINUTES, REFRESH_TOKEN_TTL_DAYS } from "./constants.js";
 
-export async function issueTokenPair(app: FastifyInstance, userId: string, login: string) {
-  const expiresAt = new Date(Date.now() + REFRESH_TOKEN_TTL_DAYS * 24 * 60 * 60 * 1000);
+import { env } from "../env.js";
+import {
+  ACCESS_TOKEN_TTL_MINUTES,
+  REFRESH_TOKEN_TTL_DAYS,
+} from "./constants.js";
+
+export async function issueTokenPair(
+  app: FastifyInstance,
+  userId: string,
+  login: string,
+) {
+  const expiresAt = new Date(
+    Date.now() + REFRESH_TOKEN_TTL_DAYS * 24 * 60 * 60 * 1000,
+  );
 
   const refreshTokenRecord = await app.prisma.refreshToken.create({
     data: {
@@ -29,7 +39,11 @@ export async function issueTokenPair(app: FastifyInstance, userId: string, login
   };
 }
 
-export function setAuthCookies(reply: FastifyReply, accessToken: string, refreshToken: string) {
+export function setAuthCookies(
+  reply: FastifyReply,
+  accessToken: string,
+  refreshToken: string,
+) {
   return reply
     .setCookie("access_token", accessToken, {
       httpOnly: true,
@@ -57,7 +71,10 @@ export function clearAuthCookies(reply: FastifyReply) {
     });
 }
 
-export function unauthorized(reply: FastifyReply, message = "Invalid or expired refresh token") {
+export function unauthorized(
+  reply: FastifyReply,
+  message = "Invalid or expired refresh token",
+) {
   return reply.status(401).send({
     error: {
       code: "UNAUTHORIZED",
@@ -66,7 +83,10 @@ export function unauthorized(reply: FastifyReply, message = "Invalid or expired 
   });
 }
 
-export function invalidToken(reply: FastifyReply, message = "Invalid or expired reset token") {
+export function invalidToken(
+  reply: FastifyReply,
+  message = "Invalid or expired reset token",
+) {
   return reply.status(401).send({
     error: {
       code: "INVALID_TOKEN",

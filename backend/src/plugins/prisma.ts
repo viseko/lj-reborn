@@ -1,9 +1,11 @@
-import { PrismaClient } from "../generated/prisma/client.js";
 import { PrismaPg } from "@prisma/adapter-pg";
 import fp from "fastify-plugin";
-import { env } from "../env.js";
 
-const connectionString = env.NODE_ENV === "test" ? env.DATABASE_URL_TEST : env.DATABASE_URL;
+import { env } from "../env.js";
+import { PrismaClient } from "../generated/prisma/client.js";
+
+const connectionString =
+  env.NODE_ENV === "test" ? env.DATABASE_URL_TEST : env.DATABASE_URL;
 
 const adapter = new PrismaPg({ connectionString });
 const prisma = new PrismaClient({ adapter });

@@ -1,7 +1,11 @@
 import jwt from "@fastify/jwt";
 import fp from "fastify-plugin";
+
+import {
+  ACCESS_TOKEN_TTL_MINUTES,
+  REFRESH_TOKEN_TTL_DAYS,
+} from "../auth/constants.js";
 import { env } from "../env.js";
-import { ACCESS_TOKEN_TTL_MINUTES, REFRESH_TOKEN_TTL_DAYS } from "../auth/constants.js";
 
 export default fp(async (fastify) => {
   await fastify.register(jwt, {

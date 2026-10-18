@@ -1,5 +1,6 @@
-import { apiFetch } from "@/shared/api/clients";
 import { create } from "zustand";
+
+import { apiFetch } from "@/shared/api/clients";
 
 export type User = {
   id: string;

@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect } from "react";
-import { type User, useUserStore } from "@/entities/user";
-import { useShallow } from "zustand/shallow";
 import Link from "next/link";
-import { Button } from "@/shared/ui/Button/Button";
-import styles from "./Header.module.scss";
 import { User as UserIcon } from "lucide-react";
+import { useShallow } from "zustand/shallow";
+
+import { type User, useUserStore } from "@/entities/user";
+import { Button } from "@/shared/ui/Button/Button";
+
+import styles from "./Header.module.scss";
 
 type HeaderAuthClientProps = {
   initialUser: User | null;
@@ -33,10 +35,16 @@ export const HeaderAuthClient = ({ initialUser }: HeaderAuthClientProps) => {
       {currentUser ? (
         <div className={styles.userInfo}>
           <div className={styles.userName}>
-            <UserIcon width={16} height={16} />
+            <UserIcon
+              width={16}
+              height={16}
+            />
             <span>{currentUser.login}</span>
           </div>
-          <Button variant="secondary" onClick={() => logout()}>
+          <Button
+            variant="secondary"
+            onClick={() => logout()}
+          >
             Выйти
           </Button>
         </div>

@@ -1,6 +1,8 @@
-import { cookies } from "next/headers";
 import "server-only";
+
+import { cookies } from "next/headers";
 import { importSPKI, jwtVerify } from "jose";
+
 import { accessTokenPayloadSchema } from "@lj/shared";
 
 let keyPromise: Promise<CryptoKey> | undefined;
@@ -25,7 +27,9 @@ export const getSessionUser = async () => {
   const key = await getPublicKey();
 
   try {
-    const { payload } = await jwtVerify(accessToken, key, { algorithms: ["EdDSA"] });
+    const { payload } = await jwtVerify(accessToken, key, {
+      algorithms: ["EdDSA"],
+    });
     const result = accessTokenPayloadSchema.safeParse(payload);
 
     if (!result.success) {

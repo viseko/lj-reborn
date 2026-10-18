@@ -1,7 +1,8 @@
-import { useId, useState, type InputHTMLAttributes } from "react";
-import { Eye, EyeOff } from "lucide-react";
-import styles from "./Input.module.scss";
+import { type InputHTMLAttributes, useId, useState } from "react";
 import clsx from "clsx";
+import { Eye, EyeOff } from "lucide-react";
+
+import styles from "./Input.module.scss";
 
 type InputProps = {
   label?: string;
@@ -20,7 +21,10 @@ export const Input = ({ label, error, type, id, ...props }: InputProps) => {
   return (
     <div className={styles.field}>
       {label && (
-        <label className={styles.label} htmlFor={inputId}>
+        <label
+          className={styles.label}
+          htmlFor={inputId}
+        >
           {label}
         </label>
       )}
@@ -44,7 +48,10 @@ export const Input = ({ label, error, type, id, ...props }: InputProps) => {
           </button>
         )}
         {error && (
-          <span id={errorId} className={styles.error}>
+          <span
+            id={errorId}
+            className={styles.error}
+          >
             {error}
           </span>
         )}

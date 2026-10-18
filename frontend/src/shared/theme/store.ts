@@ -4,7 +4,9 @@ type Theme = "light" | "dark";
 
 function getInitialTheme(): Theme {
   if (typeof document === "undefined") return "light"; // на сервере document нет
-  return (document.documentElement.getAttribute("data-theme") as Theme) ?? "light";
+  return (
+    (document.documentElement.getAttribute("data-theme") as Theme) ?? "light"
+  );
 }
 
 type ThemeStore = {

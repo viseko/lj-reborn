@@ -1,5 +1,6 @@
-import cron from "node-cron";
 import fp from "fastify-plugin";
+import cron from "node-cron";
+
 import { cleanupExpiredTokens } from "../auth/cleanup.js";
 
 export default fp(async (app) => {

@@ -6,7 +6,9 @@ config();
 
 // Схема валидации
 const schema = z.object({
-  NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
+  NODE_ENV: z
+    .enum(["development", "test", "production"])
+    .default("development"),
   PORT: z.coerce.number().int().positive().default(3001),
   LOG_LEVEL: z.string().default("info"),
   DATABASE_URL: z.string().min(1),
