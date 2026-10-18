@@ -26,6 +26,9 @@ importers:
       eslint-plugin-react-hooks:
         specifier: ^7.1.1
         version: 7.1.1(eslint@10.11.0(jiti@2.6.1))
+      eslint-plugin-simple-import-sort:
+        specifier: ^14.0.0
+        version: 14.0.0(eslint@10.11.0(jiti@2.6.1))
       eslint-plugin-storybook:
         specifier: ^10.6.1
         version: 10.6.1(eslint@10.11.0(jiti@2.6.1))(typescript@6.0.3)
@@ -2505,6 +2508,11 @@ packages:
     engines: {node: '>=18'}
     peerDependencies:
       eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0 || ^9.0.0 || ^10.0.0
+
+  eslint-plugin-simple-import-sort@14.0.0:
+    resolution: {integrity: sha512-NUJO0+XFCkk+o5EsAJruTgnfMEpeWrPWeJS15UVF60GgXmqz1BJ9/3hzlvG7lkL8Bubzos5cCLptThbFfPnSMQ==}
+    peerDependencies:
+      eslint: '>=5.0.0'
 
   eslint-plugin-storybook@10.6.1:
     resolution: {integrity: sha512-XBmXuQcI0wzxMYc0rWKIiydvUxgS+GzLesO1YK1adnj97LhMqqsnlalbM+nXfQo1JoH2F2CI12sAH9/dAC99Dw==}
@@ -6433,6 +6441,10 @@ snapshots:
       zod-validation-error: 4.0.2(zod@4.6.5)
     transitivePeerDependencies:
       - supports-color
+
+  eslint-plugin-simple-import-sort@14.0.0(eslint@10.11.0(jiti@2.6.1)):
+    dependencies:
+      eslint: 10.11.0(jiti@2.6.1)
 
   eslint-plugin-storybook@10.6.1(eslint@10.11.0(jiti@2.6.1))(typescript@6.0.3):
     dependencies:

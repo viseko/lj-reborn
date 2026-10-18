@@ -1,18 +1,20 @@
 // For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
-import storybook from "eslint-plugin-storybook";
-
-import { defineConfig, globalIgnores } from "eslint/config";
-import globals from "globals";
 import js from "@eslint/js";
-import tseslint from "typescript-eslint";
+import { defineConfig, globalIgnores } from "eslint/config";
 import eslintConfigPrettier from "eslint-config-prettier";
 import reactHooks from "eslint-plugin-react-hooks";
+import simpleImportSort from "eslint-plugin-simple-import-sort";
+import storybook from "eslint-plugin-storybook";
+import globals from "globals";
+import tseslint from "typescript-eslint";
 
 export default defineConfig([
   js.configs.recommended,
   tseslint.configs.recommended,
   {
-    plugins: { "react-hooks": reactHooks },
+    plugins: {
+      "react-hooks": reactHooks,
+    },
     rules: {
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "warn",
@@ -32,6 +34,27 @@ export default defineConfig([
     "**/node_modules/", // игнорируется по умолчанию, но явный список не помешает
   ]),
   eslintConfigPrettier,
+  {
+    plugins: {
+      "simple-import-sort": simpleImportSort,
+    },
+    rules: {
+      "simple-import-sort/imports": [
+        "error",
+        {
+          groups: [
+            ["^\\u0000"], // side-effect: import "server-only"
+            ["^react", "^next", "^@?\\w"], // внешние пакеты
+            ["^@lj/"], // наши воркспейсы
+            ["^@/"], // алиас внутри пакета
+            ["^\\."], // относительные
+            ["\\.s?css$"], // стили последними
+          ],
+        },
+      ],
+      "simple-import-sort/exports": "error",
+    },
+  },
   {
     files: ["frontend/public/**/*.js"],
     languageOptions: {
