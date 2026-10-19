@@ -2,6 +2,7 @@ packages:
   - backend
   - frontend
   - packages/shared
+  - e2e
 
 ignoredBuiltDependencies:
   - sharp
