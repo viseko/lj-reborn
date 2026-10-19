@@ -1,16 +1,28 @@
+# Зависимости
 node_modules/
+
+# Сборка и генерация
 dist/
 .next/
+**/src/generated/
+
+# Тесты и отчёты
 coverage/
 playwright-report/
 test-results/
-cheatsheets/
-learning/
-**/src/generated/
 
-.DS_Store
-Thumbs.db
+# Переменные окружения: коммитим только шаблоны
 .env*
 !.env.example
+
+# Логи
 *.log
+
+# Учебные материалы
+/docs/cheatsheets/
+/docs/learning/
+
+# Мусор ОС
+.DS_Store
+Thumbs.db
 
