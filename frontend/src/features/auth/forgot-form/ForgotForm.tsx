@@ -2,6 +2,7 @@
 
 import type { FormHTMLAttributes, SubmitEvent } from "react";
 import { useState } from "react";
+import Link from "next/link";
 
 import { forgotPasswordSchema } from "@lj/shared";
 
@@ -62,11 +63,11 @@ export const ForgotForm = ({
   };
 
   const formFooter = isSent ? (
-    <a href="/login">Вернуться ко входу</a>
+    <Link href="/login">Вернуться ко входу</Link>
   ) : (
     <>
-      <a href="/register">Зарегистрироваться</a>
-      <a href="/login">Вспомнили пароль? Войти</a>
+      <Link href="/register">Зарегистрироваться</Link>
+      <Link href="/login">Вспомнили пароль? Войти</Link>
     </>
   );
 
@@ -88,7 +89,7 @@ export const ForgotForm = ({
         <Input
           type="text"
           name="identifier"
-          placeholder="Логин или email"
+          label="Логин или email"
           value={values.identifier}
           error={errors?.identifier}
           onChange={handleChange}

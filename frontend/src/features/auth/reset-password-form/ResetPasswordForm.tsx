@@ -88,7 +88,7 @@ export const ResetPasswordForm = ({
       <Input
         type="password"
         name="newPassword"
-        placeholder="Пароль"
+        label="Пароль"
         value={values.newPassword}
         error={errors?.newPassword}
         onChange={handleChange}
@@ -97,7 +97,7 @@ export const ResetPasswordForm = ({
       <Input
         type="password"
         name="newPasswordRepeat"
-        placeholder="Повторите пароль"
+        label="Повторите пароль"
         value={values.newPasswordRepeat}
         error={errors?.newPasswordRepeat}
         onChange={handleChange}

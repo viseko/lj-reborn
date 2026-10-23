@@ -1,6 +1,7 @@
 "use client";
 
 import type { FormHTMLAttributes, SubmitEvent } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { loginSchema } from "@lj/shared";
@@ -61,8 +62,8 @@ export const LoginForm = ({
 
   const formFooter = (
     <>
-      <a href="/register">Зарегистрироваться</a>
-      <a href="/forgot">Забыли пароль?</a>
+      <Link href="/register">Зарегистрироваться</Link>
+      <Link href="/forgot">Забыли пароль?</Link>
     </>
   );
 
@@ -78,7 +79,7 @@ export const LoginForm = ({
       <Input
         type="text"
         name="login"
-        placeholder="Логин"
+        label="Логин"
         value={values.login}
         error={errors?.login}
         onChange={handleChange}
@@ -87,7 +88,7 @@ export const LoginForm = ({
       <Input
         type="password"
         name="password"
-        placeholder="Пароль"
+        label="Пароль"
         value={values.password}
         error={errors?.password}
         onChange={handleChange}

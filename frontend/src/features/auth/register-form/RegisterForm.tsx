@@ -1,6 +1,7 @@
 "use client";
 
 import type { FormHTMLAttributes, SubmitEvent } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { registerSchema } from "@lj/shared";
@@ -72,7 +73,7 @@ export const RegisterForm = ({
     }
   };
 
-  const formFooter = <a href="/login">Уже есть аккаунт? Войти</a>;
+  const formFooter = <Link href="/login">Уже есть аккаунт? Войти</Link>;
 
   return (
     <FormCard
@@ -86,7 +87,7 @@ export const RegisterForm = ({
       <Input
         type="text"
         name="login"
-        placeholder="Логин"
+        label="Логин"
         value={values.login}
         error={errors?.login}
         onChange={handleChange}
@@ -95,7 +96,7 @@ export const RegisterForm = ({
       <Input
         type="text"
         name="username"
-        placeholder="Отображаемое имя"
+        label="Отображаемое имя"
         value={values.username}
         error={errors?.username}
         onChange={handleChange}
@@ -104,7 +105,7 @@ export const RegisterForm = ({
       <Input
         type="email"
         name="email"
-        placeholder="E-mail"
+        label="E-mail"
         value={values.email}
         onChange={handleChange}
         error={errors?.email}
@@ -113,7 +114,7 @@ export const RegisterForm = ({
       <Input
         type="password"
         name="password"
-        placeholder="Пароль"
+        label="Пароль"
         value={values.password}
         error={errors?.password}
         onChange={handleChange}
@@ -122,7 +123,7 @@ export const RegisterForm = ({
       <Input
         type="password"
         name="passwordRepeat"
-        placeholder="Повторите пароль"
+        label="Повторите пароль"
         value={values.passwordRepeat}
         error={errors?.passwordRepeat}
         onChange={handleChange}
