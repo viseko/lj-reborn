@@ -5,9 +5,9 @@ import { Eye, EyeOff } from "lucide-react";
 import styles from "./Input.module.scss";
 
 type InputProps = {
-  label?: string;
+  label: string;
   error?: string;
-} & InputHTMLAttributes<HTMLInputElement>;
+} & Omit<InputHTMLAttributes<HTMLInputElement>, "placeholder">;
 
 export const Input = ({ label, error, type, id, ...props }: InputProps) => {
   const generatedId = useId();
@@ -20,21 +20,20 @@ export const Input = ({ label, error, type, id, ...props }: InputProps) => {
 
   return (
     <div className={styles.field}>
-      {label && (
+      <div className={styles.inputWrapper}>
         <label
           className={styles.label}
           htmlFor={inputId}
         >
           {label}
         </label>
-      )}
-      <div className={styles.inputWrapper}>
         <input
           id={inputId}
           type={resolvedType}
           className={clsx(styles.input, isPassword && styles.inputWithToggle)}
           aria-invalid={!!error}
           aria-describedby={error ? errorId : undefined}
+          placeholder=" "
           {...props}
         />
         {isPassword && (

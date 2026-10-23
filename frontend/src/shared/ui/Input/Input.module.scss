@@ -4,13 +4,30 @@
   gap: var(--space-1);
 }
 
-.label {
-  color: var(--cl-text-secondary);
-  font-size: var(--font-size-sm);
-}
-
 .inputWrapper {
   position: relative;
+}
+
+.label {
+  position: absolute;
+  inset: 1px;
+  padding: var(--space-2) var(--space-3);
+  overflow: hidden;
+  color: var(--cl-text-secondary);
+  font-size: var(--font-size);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  transition: opacity var(--transition-fast);
+  user-select: none;
+  pointer-events: none;
+}
+
+.inputWrapper:has(.input:not(:placeholder-shown)) .label {
+  opacity: 0;
+}
+
+.inputWrapper:has(.inputWithToggle) .label {
+  padding-right: calc(var(--space-4) * 2);
 }
 
 .input {

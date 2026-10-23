@@ -14,7 +14,6 @@ type Story = StoryObj<typeof Input>;
 export const Default: Story = {
   args: {
     label: "Email",
-    placeholder: "name@example.com",
     type: "email",
   },
 };
@@ -22,20 +21,14 @@ export const Default: Story = {
 export const WithError: Story = {
   args: {
     label: "Email",
-    placeholder: "name@example.com",
     defaultValue: ":D",
     error: "Введите корректный email",
   },
 };
 
-export const WithoutLabel: Story = {
-  args: { "aria-label": "Поиск", placeholder: "Поиск по записям" },
-};
-
 export const Disabled: Story = {
   args: {
     label: "Email",
-    placeholder: "name@example.com",
     type: "email",
     disabled: true,
   },
