@@ -30,7 +30,7 @@ export const loginSchema = z.object({
 });
 
 export const forgotPasswordSchema = z.object({
-  identifier: z.string().min(1),
+  identifier: z.string().min(1, "Это обязательное поле"),
 });
 
 export const resetPasswordSchema = z.object({
