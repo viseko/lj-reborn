@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { registerSchema } from "@lj/shared";
 
 import { useUserStore } from "@/entities/user";
-import { ApiError } from "@/shared/api/clients";
+import { getErrorMessage } from "@/shared/api/getErrorMessage";
 import { useFormState } from "@/shared/lib/useFormState";
 import { zodErrorsToFields } from "@/shared/lib/zodErrorsToFields";
 import { FormCard } from "@/shared/ui/FormCard/FormCard";
@@ -67,9 +67,7 @@ export const RegisterForm = ({
       await register(result.data);
       router.push("/");
     } catch (err) {
-      if (err instanceof ApiError) {
-        setSubmitError(err.message);
-      }
+      setSubmitError(getErrorMessage(err));
     }
   };
 

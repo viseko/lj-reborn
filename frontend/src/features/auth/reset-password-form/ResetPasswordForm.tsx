@@ -6,7 +6,8 @@ import { useRouter } from "next/navigation";
 
 import { resetPasswordSchema } from "@lj/shared";
 
-import { ApiError, apiFetch } from "@/shared/api/clients";
+import { apiFetch } from "@/shared/api/clients";
+import { getErrorMessage } from "@/shared/api/getErrorMessage";
 import { useFormState } from "@/shared/lib/useFormState";
 import { zodErrorsToFields } from "@/shared/lib/zodErrorsToFields";
 import { FormCard } from "@/shared/ui/FormCard/FormCard";
@@ -71,9 +72,7 @@ export const ResetPasswordForm = ({
       });
       router.push("/login");
     } catch (err) {
-      if (err instanceof ApiError) {
-        setSubmitError(err.message);
-      }
+      setSubmitError(getErrorMessage(err));
     }
   };
 

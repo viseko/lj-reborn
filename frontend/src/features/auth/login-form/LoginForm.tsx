@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { loginSchema } from "@lj/shared";
 
 import { useUserStore } from "@/entities/user";
-import { ApiError } from "@/shared/api/clients";
+import { getErrorMessage } from "@/shared/api/getErrorMessage";
 import { useFormState } from "@/shared/lib/useFormState";
 import { zodErrorsToFields } from "@/shared/lib/zodErrorsToFields";
 import { FormCard } from "@/shared/ui/FormCard/FormCard";
@@ -54,9 +54,7 @@ export const LoginForm = ({
       await login(result.data.login, result.data.password);
       router.push("/");
     } catch (err) {
-      if (err instanceof ApiError) {
-        setSubmitError(err.message);
-      }
+      setSubmitError(getErrorMessage(err));
     }
   };
 
