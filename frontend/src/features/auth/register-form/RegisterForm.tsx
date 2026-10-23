@@ -82,6 +82,7 @@ export const RegisterForm = ({
       submitError={submitError}
       onSubmit={handleSubmit}
       footer={formFooter}
+      titleLevel="h1"
       {...props}
     >
       <Input

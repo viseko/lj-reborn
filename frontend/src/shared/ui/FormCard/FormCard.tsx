@@ -10,6 +10,7 @@ type FormCardProps = {
   footer?: ReactNode;
   submitError?: string | null;
   children: ReactNode;
+  titleLevel?: "h1" | "h2";
 } & FormHTMLAttributes<HTMLFormElement>;
 
 export const FormCard = ({
@@ -18,17 +19,27 @@ export const FormCard = ({
   footer,
   submitError,
   children,
+  titleLevel = "h2",
   ...props
 }: FormCardProps) => {
+  const TitleTag = titleLevel;
+
   return (
     <form
       className={styles.form}
       noValidate
       {...props}
     >
-      <div className={styles.title}>{title}</div>
+      <TitleTag className={styles.title}>{title}</TitleTag>
       <div className={styles.rows}>{children}</div>
-      {submitError && <p className={styles.submitError}>{submitError}</p>}
+      {submitError && (
+        <p
+          className={styles.submitError}
+          role="alert"
+        >
+          {submitError}
+        </p>
+      )}
       {submitLabel && (
         <Button
           type="submit"

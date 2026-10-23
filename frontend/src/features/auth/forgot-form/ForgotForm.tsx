@@ -77,6 +77,7 @@ export const ForgotForm = ({
       submitLabel={isSent ? null : "Восстановить"}
       submitError={submitError}
       onSubmit={handleSubmit}
+      titleLevel="h1"
       footer={formFooter}
       {...props}
     >

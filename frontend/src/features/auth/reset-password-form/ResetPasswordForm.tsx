@@ -83,6 +83,7 @@ export const ResetPasswordForm = ({
       submitLabel="Готово"
       submitError={submitError}
       onSubmit={handleSubmit}
+      titleLevel="h1"
       {...props}
     >
       <Input
