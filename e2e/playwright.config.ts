@@ -1,6 +1,13 @@
 import { defineConfig, devices } from "@playwright/test";
 import { existsSync } from "node:fs";
 
+import {
+  BACKEND_PORT,
+  BACKEND_URL,
+  FRONTEND_PORT,
+  FRONTEND_URL,
+} from "./helpers/env.js";
+
 // Локально адрес БД берётся из e2e/.env;
 // В CI файла нет, переменные задаёт сам пайплайн
 if (existsSync(".env")) {
@@ -18,7 +25,7 @@ if (!databaseURL) {
 export default defineConfig({
   testDir: "./tests",
   use: {
-    baseURL: "http://localhost:3100",
+    baseURL: FRONTEND_URL,
   },
   projects: [
     {
@@ -30,22 +37,21 @@ export default defineConfig({
     {
       // бекенд: без watch - в тестах перезапуск по изменению файлов не нужен
       command: "pnpm --filter @lj/backend exec tsx src/server.ts",
-      url: "http://localhost:3101/health",
+      url: `${BACKEND_URL}/health`,
       env: {
-        PORT: "3101",
+        PORT: BACKEND_PORT,
         DATABASE_URL: databaseURL,
-        CORS_ORIGIN: "http://localhost:3100",
+        CORS_ORIGIN: FRONTEND_URL,
       },
       reuseExistingServer: false,
       timeout: 120_000,
     },
     {
       // фронтенд: продакшен-сборка; NEXT_PUBLIC_API вшивается в код при build
-      command:
-        "pnpm --filter @lj/frontend build && pnpm --filter frontend start -p 3100",
-      url: "http://localhost:3100",
+      command: `pnpm --filter @lj/frontend build && pnpm --filter @lj/frontend start -p ${FRONTEND_PORT}`,
+      url: FRONTEND_URL,
       env: {
-        NEXT_PUBLIC_API_URL: "http://localhost:3101",
+        NEXT_PUBLIC_API_URL: BACKEND_URL,
       },
       reuseExistingServer: false,
       timeout: 120_000,
