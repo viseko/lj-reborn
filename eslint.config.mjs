@@ -12,6 +12,7 @@ export default defineConfig([
   js.configs.recommended,
   tseslint.configs.recommended,
   {
+    files: ["frontend/**/*.{ts,tsx}"],
     plugins: {
       "react-hooks": reactHooks,
     },
