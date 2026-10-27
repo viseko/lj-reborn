@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 
+import { HydrationMarker } from "@/app/providers";
 import { Header } from "@/widgets/header";
 
 import "@/shared/styles/globals.scss";
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <script src="/theme-init.js"></script>
       </head>
       <body>
+        <HydrationMarker />
         <div className="page">
           <Header />
           <main className="page-main">{children}</main>
