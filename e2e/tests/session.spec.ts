@@ -59,3 +59,15 @@ test("logged-in user is redirected from /login to home", async ({
     page.getByRole("banner").getByText(loggedInUser.login),
   ).toBeVisible();
 });
+
+test("server HTML contains logged-in header", async ({
+  page,
+  loggedInUser,
+}) => {
+  const response = await page.request.get("/");
+  const text = await response.text();
+
+  expect(response.ok()).toBe(true);
+  expect(text).toContain(`>${loggedInUser.login}<`);
+  expect(text).not.toContain('href="/login"');
+});
