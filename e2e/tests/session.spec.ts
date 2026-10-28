@@ -1,3 +1,4 @@
+import { FRONTEND_URL } from "../helpers/env.js";
 import { expect, test } from "../helpers/fixtures.js";
 import { waitForHydration } from "../helpers/waitForHydration.js";
 
@@ -42,4 +43,19 @@ test("logout switches the app to guest mode", async ({
   await page.reload();
 
   await checkHeaderStatus();
+});
+
+test("logged-in user is redirected from /login to home", async ({
+  page,
+  loggedInUser,
+}) => {
+  const response = await page.goto("/login");
+  const request = response!.request();
+
+  await expect(page).toHaveURL("/");
+
+  expect(request.redirectedFrom()?.url()).toBe(`${FRONTEND_URL}/login`);
+  await expect(
+    page.getByRole("banner").getByText(loggedInUser.login),
+  ).toBeVisible();
 });
