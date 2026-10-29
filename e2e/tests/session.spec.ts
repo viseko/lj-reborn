@@ -67,7 +67,7 @@ test("server HTML contains logged-in header", async ({
   const response = await page.request.get("/");
   const text = await response.text();
 
-  expect(response.ok()).toBe(true);
+  expect(response.ok()).toBeTruthy();
   expect(text).toContain(`>${loggedInUser.login}<`);
   expect(text).not.toContain('href="/login"');
 });
