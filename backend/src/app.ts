@@ -11,6 +11,7 @@ import { env } from "./env.js";
 import { Prisma } from "./generated/prisma/client.js";
 import cleanupPlugin from "./plugins/cleanup.js";
 import jwtPlugin from "./plugins/jwt.js";
+import postmanPlugin from "./plugins/postman.js";
 import prismaPlugin from "./plugins/prisma.js";
 
 export function buildApp() {
@@ -36,6 +37,7 @@ export function buildApp() {
   app.register(prismaPlugin);
   app.register(cookie);
   app.register(cleanupPlugin);
+  app.register(postmanPlugin);
 
   // Эндпойнты
   app.register(authRoutes, {
