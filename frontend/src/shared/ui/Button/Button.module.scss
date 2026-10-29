@@ -1,5 +1,7 @@
 .button {
+  display: inline-block;
   padding: var(--space-2) var(--space-4);
+  color: var(--cl-text);
   font-size: var(--font-size);
   font-weight: 500;
   white-space: nowrap;
@@ -21,7 +23,7 @@
     cursor: not-allowed;
   }
 
-  &:active {
+  &:active:not(:disabled) {
     transform: scale(0.95);
   }
 }
@@ -41,5 +43,14 @@
 
   &:hover:not(:disabled) {
     background-color: var(--cl-secondary-hover);
+  }
+}
+
+.ghost {
+  color: var(--cl-text);
+  font-size: var(--font-size-sm);
+
+  &:hover:not(:disabled) {
+    color: var(--cl-primary);
   }
 }

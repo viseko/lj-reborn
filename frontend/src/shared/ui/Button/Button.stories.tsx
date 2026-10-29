@@ -19,6 +19,14 @@ export const Primary: Story = {
   },
 };
 
+export const PrimaryLink: Story = {
+  args: {
+    variant: "primary",
+    children: "Сохранить",
+    href: "#",
+  },
+};
+
 export const Secondary: Story = {
   args: {
     disabled: false,
@@ -27,10 +35,26 @@ export const Secondary: Story = {
   },
 };
 
+export const SecondaryLink: Story = {
+  args: {
+    href: "#",
+    variant: "secondary",
+    children: "Отмена",
+  },
+};
+
+export const Ghost: Story = {
+  args: { variant: "ghost", children: "Сохранить", disabled: false },
+};
+
 export const DisabledPrimary: Story = {
   args: { variant: "primary", children: "Сохранить", disabled: true },
 };
 
 export const DisabledSecondary: Story = {
   args: { variant: "secondary", children: "Отмена", disabled: true },
+};
+
+export const DisabledGhost: Story = {
+  args: { variant: "ghost", children: "Сохранить", disabled: true },
 };

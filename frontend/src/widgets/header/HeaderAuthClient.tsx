@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import Link from "next/link";
 import { User as UserIcon } from "lucide-react";
 import { useShallow } from "zustand/shallow";
 
@@ -56,10 +55,19 @@ export const HeaderAuthClient = ({
         </div>
       ) : (
         <div className={styles.actions}>
-          <Link href="/login">Войти</Link>
-          <Link href="/register">
-            <Button variant="primary">Зарегистрироваться</Button>
-          </Link>
+          <Button
+            variant="ghost"
+            href="/login"
+          >
+            Войти
+          </Button>
+
+          <Button
+            variant="primary"
+            href="/register"
+          >
+            Зарегистрироваться
+          </Button>
         </div>
       )}
     </>

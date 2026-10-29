@@ -42,15 +42,6 @@
   display: flex;
   gap: var(--space-3);
   align-items: center;
-
-  a {
-    color: var(--cl-text);
-    font-size: var(--font-size-sm);
-
-    &:hover {
-      color: var(--cl-primary);
-    }
-  }
 }
 
 .controls {
