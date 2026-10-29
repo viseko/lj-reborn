@@ -1,6 +1,5 @@
-import { expect, test } from "@playwright/test";
-
-import { createUser, registerViaAPI } from "../helpers/user.js";
+import { expect, test } from "../helpers/fixtures.js";
+import { createUser } from "../helpers/user.js";
 
 test("user registration", async ({ page }) => {
   const user = createUser();
@@ -25,17 +24,13 @@ test("user registration", async ({ page }) => {
   await expect(page.getByRole("banner").getByText(user.login)).toBeVisible();
 });
 
-test("user login", async ({ page, request }) => {
-  // Регистрируем напрямую через API
-  const user = createUser();
-  const response = await registerViaAPI(request, user);
-  expect(response.ok()).toBeTruthy();
-
-  // Логинимся
+test("user login", async ({ page, registeredUser }) => {
   await page.goto("/login");
 
-  await page.getByLabel("Логин").fill(user.login);
-  await page.getByLabel("Пароль", { exact: true }).fill(user.password);
+  await page.getByLabel("Логин").fill(registeredUser.login);
+  await page
+    .getByLabel("Пароль", { exact: true })
+    .fill(registeredUser.password);
 
   await page
     .getByRole("main")
@@ -45,18 +40,18 @@ test("user login", async ({ page, request }) => {
     .click();
 
   await expect(page).toHaveURL("/");
-  await expect(page.getByRole("banner").getByText(user.login)).toBeVisible();
+  await expect(
+    page.getByRole("banner").getByText(registeredUser.login),
+  ).toBeVisible();
 });
 
-test("wrong password", async ({ page, request }) => {
-  const user = createUser();
-  const response = await registerViaAPI(request, user);
-  expect(response.ok()).toBeTruthy();
-
+test("wrong password", async ({ page, registeredUser }) => {
   await page.goto("/login");
 
-  await page.getByLabel("Логин").fill(user.login);
-  await page.getByLabel("Пароль", { exact: true }).fill(user.password + "!");
+  await page.getByLabel("Логин").fill(registeredUser.login);
+  await page
+    .getByLabel("Пароль", { exact: true })
+    .fill(registeredUser.password + "!");
 
   await page
     .getByRole("main")

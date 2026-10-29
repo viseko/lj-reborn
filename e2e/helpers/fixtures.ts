@@ -4,6 +4,7 @@ import { createUser, registerViaAPI } from "./user.js";
 
 type Fixtures = {
   loggedInUser: ReturnType<typeof createUser>;
+  registeredUser: ReturnType<typeof createUser>;
 };
 
 export const test = base.extend<Fixtures>({
@@ -17,6 +18,14 @@ export const test = base.extend<Fixtures>({
     await use(user);
 
     // После теста: здесь "уборка" не нужна - контекст вкладки закроется сам
+  },
+  // Вариант для сценария "пользователь существует, но браузер гость"
+  registeredUser: async ({ request }, use) => {
+    const user = createUser();
+    const response = await registerViaAPI(request, user);
+    expect(response.ok()).toBeTruthy();
+
+    await use(user);
   },
 });
 
