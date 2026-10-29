@@ -242,7 +242,7 @@ export async function authRoutes(app: FastifyInstance) {
 
       const resetLink = `${env.CORS_ORIGIN}/reset-password?token=${rawToken}`;
 
-      await sendPasswordResetEmail(request.log, user.email, resetLink);
+      await sendPasswordResetEmail(app.postman, user.email, resetLink);
     }
 
     return reply.status(200).send({

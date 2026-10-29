@@ -1,15 +1,13 @@
-import type { FastifyBaseLogger } from "fastify";
+import type { Postman } from "../plugins/postman.js";
 
 export async function sendPasswordResetEmail(
-  logger: FastifyBaseLogger,
+  postman: Postman,
   to: string,
   resetLink: string,
 ) {
-  logger.info(
-    {
-      to,
-      resetLink,
-    },
-    "Password reset email (dev mode, not actually sent)",
-  );
+  await postman.send({
+    to,
+    subject: "Восстановление пароля",
+    text: `Перейдите по ссылке, чтобы восстановить пароль: ${resetLink}`,
+  });
 }

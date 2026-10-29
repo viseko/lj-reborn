@@ -23,7 +23,7 @@ export type Postman = {
 export default fp(async (fastify) => {
   let postman: Postman;
 
-  if (host) {
+  if (host && env.NODE_ENV !== "test") {
     const transport = nodemailer.createTransport({ host, port });
 
     postman = {
