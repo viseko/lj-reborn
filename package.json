@@ -8,7 +8,13 @@
     "format:check": "prettier --check .",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "prepare": "husky"
+    "prepare": "husky",
+    "dev:back": "pnpm --filter @lj/backend dev",
+    "dev:front": "pnpm --filter @lj/frontend dev",
+    "test:back": "pnpm --filter @lj/backend test",
+    "test:front": "pnpm --filter @lj/frontend test",
+    "test:e2e": "pnpm --filter @lj/e2e test",
+    "test:shared": "pnpm --filter @lj/e2e test"
   },
   "keywords": [],
   "author": "Viseko23 <viseko23@gmail.com>",
