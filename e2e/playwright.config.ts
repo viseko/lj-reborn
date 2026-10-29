@@ -6,6 +6,7 @@ import {
   BACKEND_URL,
   FRONTEND_PORT,
   FRONTEND_URL,
+  MAILPIT_URL,
 } from "./helpers/env.js";
 
 // Локально адрес БД берётся из e2e/.env;
@@ -42,6 +43,7 @@ export default defineConfig({
         PORT: BACKEND_PORT,
         DATABASE_URL: databaseURL,
         CORS_ORIGIN: FRONTEND_URL,
+        SMTP_HOST: "localhost",
       },
       reuseExistingServer: false,
       timeout: 120_000,
@@ -53,6 +55,12 @@ export default defineConfig({
       env: {
         NEXT_PUBLIC_API_URL: BACKEND_URL,
       },
+      reuseExistingServer: false,
+      timeout: 120_000,
+    },
+    {
+      command: "mailpit",
+      url: MAILPIT_URL,
       reuseExistingServer: false,
       timeout: 120_000,
     },
