@@ -1,14 +1,25 @@
+@use "layers";
 @use "reset";
 @use "tokens";
 @use "layout";
 
-html {
-  font-size: var(--step);
-}
+@layer base {
+  html {
+    font-size: var(--step);
+  }
 
-body {
-  color: var(--cl-text);
-  font-family: var(--font-family);
-  font-size: var(--font-size);
-  background: var(--cl-background);
+  body {
+    color: var(--cl-text);
+    font-family: var(--font-family);
+    font-size: var(--font-size);
+    background: var(--cl-background);
+  }
+
+  a {
+    color: var(--cl-text);
+
+    &:hover {
+      color: var(--cl-primary);
+    }
+  }
 }

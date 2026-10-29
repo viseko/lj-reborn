@@ -1,23 +1,25 @@
-html,
-body {
-  min-height: 100vh;
-}
+@layer layout {
+  html,
+  body {
+    min-height: 100vh;
+  }
 
-.page {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
+  .page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
 
-.page-main {
-  display: flex;
-  flex-grow: 1;
-  flex-direction: column;
-}
+  .page-main {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+  }
 
-.container {
-  width: 100%;
-  max-width: var(--container-max-width);
-  margin: 0 auto;
-  padding: 0 var(--container-padding);
+  .container {
+    width: 100%;
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+    padding: 0 var(--container-padding);
+  }
 }
