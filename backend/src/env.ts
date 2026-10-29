@@ -24,6 +24,9 @@ const schema = z.object({
     .endsWith("-----END PUBLIC KEY-----"),
   JWT_REFRESH_SECRET: z.string().min(32),
   COOKIE_DOMAIN: z.string().optional(),
+  SMTP_HOST: z.string().optional(),
+  SMTP_PORT: z.coerce.number().int().positive().default(1025),
+  MAIL_FROM: z.string().default("LJ Reborn <no-reply@lj.local>"),
 });
 
 // Парсим и экспортируем значения переменных окружения
