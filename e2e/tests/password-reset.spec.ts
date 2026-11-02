@@ -6,58 +6,29 @@ test("user can reset password via email link", async ({
   page,
   registeredUser,
   request,
+  header,
+  loginPage,
+  forgotPage,
+  resetPasswordPage,
 }) => {
   const newPassword = registeredUser.password + "!";
 
-  await page.goto("/login");
-  await waitForHydration(page);
-
-  await page
-    .getByRole("link", {
-      name: "Забыли пароль?",
-    })
-    .click();
+  await loginPage.goto();
+  await loginPage.forgotLink.click();
 
   await expect(page).toHaveURL("/forgot");
-
-  await page.getByLabel("Логин или email").fill(registeredUser.email);
-  await page
-    .getByRole("button", {
-      name: "Восстановить",
-    })
-    .click();
-
-  await expect(
-    page.getByText(
-      "Если такой email зарегистрирован, на него отправлена ссылка для сброса пароля.",
-    ),
-  ).toBeVisible();
+  await forgotPage.submit(registeredUser.email);
+  await expect(forgotPage.sentMessage).toBeVisible();
 
   const resetLink = await getResetLink(request, registeredUser.email);
-
   await page.goto(resetLink);
   await waitForHydration(page);
 
   await expect(page).toHaveURL(/\/reset-password\?token=/);
-  await page
-    .getByRole("textbox", { name: "Пароль", exact: true })
-    .fill(newPassword);
-  await page
-    .getByRole("textbox", { name: "Повторите пароль" })
-    .fill(newPassword);
-
-  await page.getByRole("button", { name: "Готово" }).click();
+  await resetPasswordPage.submit(newPassword);
 
   await expect(page).toHaveURL("/login");
+  await loginPage.login(registeredUser.login, newPassword);
 
-  await page.getByRole("textbox", { name: "Логин" }).fill(registeredUser.login);
-  await page
-    .getByRole("textbox", { name: "Пароль", exact: true })
-    .fill(newPassword);
-
-  await page.getByRole("button", { name: "Войти" }).click();
-
-  await expect(
-    page.getByRole("banner").getByText(registeredUser.login),
-  ).toBeVisible();
+  await expect(header.user(registeredUser.login)).toBeVisible();
 });

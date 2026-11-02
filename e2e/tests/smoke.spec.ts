@@ -1,10 +1,6 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "../helpers/fixtures.js";
 
-test("home page shows login link", async ({ page }) => {
+test("home page shows login link", async ({ page, header }) => {
   await page.goto("/");
-  await expect(
-    page.getByRole("link", {
-      name: "Войти",
-    }),
-  ).toBeVisible();
+  await expect(header.loginLink).toBeVisible();
 });

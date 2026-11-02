@@ -1,36 +1,23 @@
 import { expect, test } from "../helpers/fixtures.js";
-import { waitForHydration } from "../helpers/waitForHydration.js";
 
-test("login form is empty after logout", async ({ page, registeredUser }) => {
+test("login form is empty after logout", async ({
+  registeredUser,
+  header,
+  loginPage,
+}) => {
   // Логинимся
-  await page.goto("/login");
-  await waitForHydration(page);
-  await page.getByLabel("Логин").fill(registeredUser.login);
-  await page
-    .getByLabel("Пароль", { exact: true })
-    .fill(registeredUser.password);
-  await page
-    .getByRole("main")
-    .getByRole("button", {
-      name: "Войти",
-    })
-    .click();
+  await loginPage.goto();
+  await loginPage.login(registeredUser.login, registeredUser.password);
 
   // * проверяем, что вход удался
-  await expect(
-    page.getByRole("banner").getByText(registeredUser.login),
-  ).toBeVisible();
+  await expect(header.user(registeredUser.login)).toBeVisible();
 
   // Логаутимся
-  const btnLogin = page.getByRole("banner").getByRole("link", {
-    name: "Войти",
-  });
-
-  await page.getByRole("banner").getByRole("button", { name: "Выйти" }).click();
-  await expect(btnLogin).toBeVisible();
+  await header.logout();
+  await expect(header.loginLink).toBeVisible();
 
   // Переходим на страницу входа и проверяем, что поля формы пустые
-  await btnLogin.click();
-  await expect(page.getByLabel("Логин")).toHaveValue("");
-  await expect(page.getByLabel("Пароль", { exact: true })).toHaveValue("");
+  await header.loginLink.click();
+  await expect(loginPage.loginInput).toHaveValue("");
+  await expect(loginPage.passwordInput).toHaveValue("");
 });
