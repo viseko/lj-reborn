@@ -1,0 +1,26 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Скачать код
+        uses: actions/checkout@v7
+
+      - name: Поставить pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Поставить Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22.14.0
+          cache: pnpm
+
+      - name: Установить зависимости
+        run: pnpm install --frozen-lockfile
+
+      - name: Линт
+        run: pnpm lint
+
+      - name: Проверка форматирования
+        run: pnpm format:check
