@@ -1,10 +1,7 @@
 import jwt from "@fastify/jwt";
 import fp from "fastify-plugin";
 
-import {
-  ACCESS_TOKEN_TTL_MINUTES,
-  REFRESH_TOKEN_TTL_DAYS,
-} from "../auth/constants.js";
+import { REFRESH_TOKEN_TTL_DAYS } from "../auth/constants.js";
 import { env } from "../env.js";
 
 export default fp(async (fastify) => {
@@ -14,7 +11,7 @@ export default fp(async (fastify) => {
       private: env.JWT_ACCESS_PRIVATE_KEY,
       public: env.JWT_ACCESS_PUBLIC_KEY,
     },
-    sign: { algorithm: "EdDSA", expiresIn: `${ACCESS_TOKEN_TTL_MINUTES}m` },
+    sign: { algorithm: "EdDSA", expiresIn: `${env.ACCESS_TOKEN_TTL_SECONDS}s` },
   });
 
   await fastify.register(jwt, {
