@@ -2,6 +2,7 @@ import { defineConfig, devices } from "@playwright/test";
 import { existsSync } from "node:fs";
 
 import {
+  ACCESS_TOKEN_TTL_SECONDS,
   BACKEND_PORT,
   BACKEND_URL,
   FRONTEND_PORT,
@@ -44,6 +45,7 @@ export default defineConfig({
         DATABASE_URL: databaseURL,
         CORS_ORIGIN: FRONTEND_URL,
         SMTP_HOST: "localhost",
+        ACCESS_TOKEN_TTL_SECONDS: ACCESS_TOKEN_TTL_SECONDS.toString(),
       },
       reuseExistingServer: false,
       timeout: 120_000,
