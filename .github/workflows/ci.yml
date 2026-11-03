@@ -24,3 +24,15 @@ jobs:
 
       - name: Проверка форматирования
         run: pnpm format:check
+
+      - name: Генерация Prisma
+        run: pnpm --filter @lj/backend exec prisma generate
+
+      - name: Типы Next
+        run: pnpm --filter @lj/frontend exec next typegen
+
+      - name: Тайпчек
+        run: pnpm -r exec tsc --noEmit
+
+      - name: Stylelint
+        run: pnpm --filter @lj/frontend lint:scss
