@@ -5,6 +5,9 @@ jobs:
     env:
       DATABASE_URL: postgresql://dagone_test:postgres@localhost:5432/dagone_test
       DATABASE_URL_TEST: postgresql://dagone_test:postgres@localhost:5432/dagone_test
+      JWT_ACCESS_PRIVATE_KEY: ${{ secrets.JWT_ACCESS_PRIVATE_KEY }}
+      JWT_ACCESS_PUBLIC_KEY: ${{ secrets.JWT_ACCESS_PUBLIC_KEY }}
+      JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -51,3 +54,9 @@ jobs:
 
       - name: Prisma migrations
         run: pnpm --filter @lj/backend exec prisma migrate deploy
+
+      - name: Test backend
+        run: pnpm test:back
+
+      - name: Test shared
+        run: pnpm test:shared
