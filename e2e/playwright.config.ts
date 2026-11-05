@@ -63,7 +63,7 @@ export default defineConfig({
     {
       command: "mailpit",
       url: MAILPIT_URL,
-      reuseExistingServer: false,
+      reuseExistingServer: true,
       timeout: 120_000,
     },
   ],

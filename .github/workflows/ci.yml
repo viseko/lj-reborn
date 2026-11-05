@@ -5,6 +5,7 @@ jobs:
     env:
       DATABASE_URL: postgresql://dagone_test:postgres@localhost:5432/dagone_test
       DATABASE_URL_TEST: postgresql://dagone_test:postgres@localhost:5432/dagone_test
+      DATABASE_URL_E2E: postgresql://dagone_test:postgres@localhost:5432/dagone_test
       JWT_ACCESS_PRIVATE_KEY: ${{ secrets.JWT_ACCESS_PRIVATE_KEY }}
       JWT_ACCESS_PUBLIC_KEY: ${{ secrets.JWT_ACCESS_PUBLIC_KEY }}
       JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
@@ -18,6 +19,11 @@ jobs:
           POSTGRES_DB: dagone_test
         ports:
           - 5432:5432
+      mailpit:
+        image: axllent/mailpit:1.32.0
+        ports:
+          - 1025:1025
+          - 8025:8025
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -60,3 +66,9 @@ jobs:
 
       - name: Test shared
         run: pnpm test:shared
+
+      - name: Install Playwright
+        run: pnpm --filter @lj/e2e exec playwright install --with-deps chromium
+
+      - name: Test E2E
+        run: pnpm test:e2e
