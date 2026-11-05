@@ -2,37 +2,52 @@ name: CI
 on: [push, pull_request]
 jobs:
   checks:
+    env:
+      DATABASE_URL: postgresql://dagone_test:postgres@localhost:5432/dagone_test
+      DATABASE_URL_TEST: postgresql://dagone_test:postgres@localhost:5432/dagone_test
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: dagone_test
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: dagone_test
+        ports:
+          - 5432:5432
     steps:
-      - name: Скачать код
+      - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Поставить pnpm
+      - name: Setup pnpm
         uses: pnpm/action-setup@v6
 
-      - name: Поставить Node
+      - name: Setup Node
         uses: actions/setup-node@v7
         with:
           node-version: 22.14.0
           cache: pnpm
 
-      - name: Установить зависимости
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Линт
+      - name: Lint
         run: pnpm lint
 
-      - name: Проверка форматирования
+      - name: Format check
         run: pnpm format:check
 
-      - name: Генерация Prisma
+      - name: Prisma generation
         run: pnpm --filter @lj/backend exec prisma generate
 
-      - name: Типы Next
+      - name: Next.js types generation
         run: pnpm --filter @lj/frontend exec next typegen
 
-      - name: Тайпчек
+      - name: Type check
         run: pnpm -r exec tsc --noEmit
 
       - name: Stylelint
         run: pnpm --filter @lj/frontend lint:scss
+
+      - name: Prisma migrations
+        run: pnpm --filter @lj/backend exec prisma migrate deploy
