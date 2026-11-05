@@ -28,7 +28,10 @@ export default defineConfig({
   testDir: "./tests",
   use: {
     baseURL: FRONTEND_URL,
+    screenshot: "only-on-failure",
+    trace: "retain-on-failure",
   },
+  reporter: [["list"], ["html", { open: "never" }]],
   projects: [
     {
       name: "chromium",
