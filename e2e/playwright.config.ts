@@ -41,7 +41,7 @@ export default defineConfig({
   webServer: [
     {
       // бекенд: без watch - в тестах перезапуск по изменению файлов не нужен
-      command: "pnpm --filter @lj/backend exec tsx src/server.ts",
+      command: "pnpm --filter @lj/backend start",
       url: `${BACKEND_URL}/health`,
       env: {
         PORT: BACKEND_PORT,

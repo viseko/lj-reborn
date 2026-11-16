@@ -109,7 +109,14 @@
   - [x] 7.6.2 Типы и stylelint: сначала сгенерировать то, чего нет в git (`prisma generate` → `backend/src/generated/`, `next typegen` → `next-env.d.ts`), потом `tsc --noEmit` во всех пакетах (`pnpm -r`), `lint:scss` фронта. Зелёный; мутации в бэке и фронте (ошибка типа в ветке) — CI красный, ловит
   - [x] 7.6.3 Тесты бэка и shared: Postgres как service-контейнер (`postgres:16`, одна одноразовая база, `DATABASE_URL` и `DATABASE_URL_TEST` на неё), `prisma migrate deploy` (не `dev` — тот интерактивный), JWT-ключи и refresh-секрет — отдельная пара только для CI, в GitHub Secrets (`${{ secrets.… }}`). Зелёный: 29 тестов бэка, 7 shared
   - [x] 7.6.4 e2e: `DATABASE_URL_E2E` на ту же одноразовую базу; Mailpit — service container `axllent/mailpit:v…` (порты 1025 SMTP и 8025 HTTP), в конфиге Playwright у Mailpit `reuseExistingServer: true` (настроек нет — любой экземпляр годится; у бэка и фронта `false`, у них свой `env`); `playwright install --with-deps chromium`; `trace: "retain-on-failure"`, `screenshot: "only-on-failure"`, репортёры `list` + `html` (`open: "never"`, иначе CI зависнет); `actions/upload-artifact` с `if: failure()`. Зелёный: 12 e2e; мутация — красный прогон, отчёт с трейсом в Artifacts
-- [ ] 7.7 CD (цель выбираем позже): фронт на Vercel, бэк на Render/Railway, Neon; скрипты `build`/`start` для бэка (сейчас только `dev` через `tsx watch`), env в проде (`COOKIE_DOMAIN`, ключи, `CORS_ORIGIN`, `SMTP_HOST`/`MAIL_FROM` настоящего почтового сервиса); `refine` в схеме env: в `production` без `SMTP_HOST` бэк не стартует (fail fast вместо молча потерянных писем)
+- [ ] 7.7 Деплой на свой VPS (cloud4box): фронт `dagone.ru`, бэк `api.dagone.ru`, PostgreSQL на сервере; скрипты `build`/`start` для бэка (сейчас только `dev` через `tsx watch`), env в проде (`COOKIE_DOMAIN`, ключи, `CORS_ORIGIN`, `SMTP_HOST`/`MAIL_FROM` настоящего почтового сервиса); `refine` в схеме env: в `production` без `SMTP_HOST` бэк не стартует (fail fast вместо молча потерянных писем)
+  - [x] 7.7.1 Домен `dagone.ru` (reg.ru) и DNS: A-записи `@`, `api`, `www` → IP VPS (cloud4box). Резолвится
+  - [ ] 7.7.2 Бэк готов к проду: `start` для бэка — `tsx src/server.ts` без `watch` (вариант A: тот же способ запуска, что проверяет e2e; сборка — в «Потом»); `refine` для `SMTP_HOST` в production
+  - [ ] 7.7.3 Сервер: Node/pnpm, код из GitHub, база и отдельная роль PostgreSQL, `.env` прода (своя пара ключей), `migrate deploy`, сборка
+  - [ ] 7.7.4 pm2: процессы `dagone-backend` / `dagone-frontend`, автозапуск после перезагрузки
+  - [ ] 7.7.5 nginx: два `server` (домен → порт), HTTPS через Let's Encrypt (certbot)
+  - [ ] 7.7.6 Почта в проде: настоящий SMTP, `MAIL_FROM` на домене
+  - [ ] 7.7.7 CD: автодеплой из GitHub Actions после зелёного CI
 
 ## Потом (после авторизации)
 
@@ -130,6 +137,7 @@
 - Типизированный линтинг (`typescript-eslint` с `projectService`) ради `no-floating-promises`: в 7.4.2 пропущенный `await` у `sendMail` линтер не поймал
 
 - e2e и i18n (если появится): тесты на одном зафиксированном языке или строки из того же словаря переводов; `data-testid` — только для элементов без текста. Редизайн e2e не ломает — локаторы по ролям и подписям, не по классам
+- Сборка бэка в JS (вариант B из 7.7.2): `tsc` → `dist/`, `start`: `node dist/server.js`; `@lj/shared` собирается в `dist/`, в `exports` два режима (исходники для dev/тестов, JS для собранного бэка); e2e и CI запускают **собранный** бэк — иначе тесты проверяют не то, что работает в проде (так «наполовину» сделано в Thothos). При переходе меняются только скрипты, `exports` shared, команда `webServer` и команда pm2
 
 ## Решения
 
@@ -146,3 +154,4 @@
 - Локально работаем с PostgreSQL 16 (единственная версия со службой); 14 и 17 не трогаем
 - Рендеринг по типам страниц (решено в 5.6, реальных страниц с данными ещё нет — применится по мере появления): публичные посты/профили — SSG/ISR (SEO, кеш, `revalidatePath`/`revalidateTag` on-demand при создании/изменении/удалении); лента с подписками и приватные записи — SSR (персонализация, нельзя кешировать статически); формы/редактор/DnD — CSR (чистая интерактивность, SEO не нужен)
 - Секреты в CI (7.6.3): JWT-ключи и refresh-секрет — в GitHub Secrets, отдельная пара только для CI (у локального окружения, CI и прода — разные ключи; утечка одного не задевает другие). Критерий «секрет или нет» — что значение открывает: пароль одноразовой Postgres в CI ничего не открывает и лежит прямо в `ci.yml`. Отвергнуты: тестовая пара открыто в `ci.yml` (приватный ключ в публичном репо, сканеры секретов, выглядит как утечка) и генерация пары шагом в CI (многострочные PEM неудобно передавать между шагами)
+- Хостинг (7.7): свой VPS (cloud4box; Beget после атаки отпал) и свой домен — фронт `dagone.ru`, бэк `api.dagone.ru`, `COOKIE_DOMAIN=dagone.ru` (сервер может поставить cookie только на свой или родительский домен — ровно задача поддоменов из 3-го модуля). Рассматривались бесплатные Vercel + Render + Neon: фронт и бэк на разных «зданиях» (`*.vercel.app`, `*.onrender.com` — Public Suffix List), общей cookie не выписать → понадобился бы прокси через rewrites Next; бэк на бесплатном Render засыпает. Выбран VPS: он уже есть (там Thothos), схема авторизации не меняется
