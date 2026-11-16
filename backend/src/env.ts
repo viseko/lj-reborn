@@ -15,7 +15,7 @@ const schema = z
     PORT: z.coerce.number().int().positive().default(3001),
     LOG_LEVEL: z.string().default("info"),
     DATABASE_URL: z.string().min(1),
-    DATABASE_URL_TEST: z.string().min(1),
+    DATABASE_URL_TEST: z.string().optional(),
     CORS_ORIGIN: z.string().default(DEFAULT_CORS_ORIGIN),
     JWT_ACCESS_PRIVATE_KEY: z
       .string()
@@ -50,6 +50,13 @@ const schema = z
     {
       error: "CORS_ORIGIN не задан",
       path: ["CORS_ORIGIN"],
+    },
+  )
+  .refine(
+    (data) => data.NODE_ENV !== "test" || Boolean(data.DATABASE_URL_TEST),
+    {
+      error: "DATABASE_URL_TEST не задан",
+      path: ["DATABASE_URL_TEST"],
     },
   );
 

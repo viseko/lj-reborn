@@ -7,6 +7,10 @@ import { PrismaClient } from "../generated/prisma/client.js";
 const connectionString =
   env.NODE_ENV === "test" ? env.DATABASE_URL_TEST : env.DATABASE_URL;
 
+if (!connectionString) {
+  throw new Error("connectionString is empty");
+}
+
 const adapter = new PrismaPg({ connectionString });
 const prisma = new PrismaClient({ adapter });
 
