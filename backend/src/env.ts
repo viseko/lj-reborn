@@ -5,6 +5,14 @@ import z from "zod";
 config();
 
 const DEFAULT_CORS_ORIGIN = "http://localhost:3000";
+const DEFAULT_MAIL_FROM = "LJ Reborn <no-reply@lj.local>";
+
+const REQUIRED_IN_PROD = [
+  "SMTP_HOST",
+  "COOKIE_DOMAIN",
+  "SMTP_PASS",
+  "SMTP_USER",
+] as const;
 
 // Схема валидации
 const schema = z
@@ -29,20 +37,31 @@ const schema = z
     COOKIE_DOMAIN: z.string().optional(),
     SMTP_HOST: z.string().optional(),
     SMTP_PORT: z.coerce.number().int().positive().default(1025),
-    MAIL_FROM: z.string().default("LJ Reborn <no-reply@lj.local>"),
+    SMTP_USER: z.string().optional(),
+    SMTP_PASS: z.string().optional(),
+    MAIL_FROM: z.string().default(DEFAULT_MAIL_FROM),
     ACCESS_TOKEN_TTL_SECONDS: z.coerce.number().int().positive().default(900),
   })
-  .refine((data) => data.NODE_ENV !== "production" || Boolean(data.SMTP_HOST), {
-    error: "SMTP_HOST не задан",
-    path: ["SMTP_HOST"],
+  .superRefine((data, ctx) => {
+    if (data.NODE_ENV === "test" && !data.DATABASE_URL_TEST) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["DATABASE_URL_TEST"],
+        message: `DATABASE_URL_TEST не задан`,
+      });
+    }
+
+    if (data.NODE_ENV !== "production") return;
+    for (const key of REQUIRED_IN_PROD) {
+      if (!data[key]) {
+        ctx.addIssue({
+          code: "custom",
+          path: [key],
+          message: `${key} не задан`,
+        });
+      }
+    }
   })
-  .refine(
-    (data) => data.NODE_ENV !== "production" || Boolean(data.COOKIE_DOMAIN),
-    {
-      error: "COOKIE_DOMAIN не задан",
-      path: ["COOKIE_DOMAIN"],
-    },
-  )
   .refine(
     (data) =>
       data.NODE_ENV !== "production" ||
@@ -53,10 +72,11 @@ const schema = z
     },
   )
   .refine(
-    (data) => data.NODE_ENV !== "test" || Boolean(data.DATABASE_URL_TEST),
+    (data) =>
+      data.NODE_ENV !== "production" || data.MAIL_FROM !== DEFAULT_MAIL_FROM,
     {
-      error: "DATABASE_URL_TEST не задан",
-      path: ["DATABASE_URL_TEST"],
+      error: "MAIL_FROM не задан",
+      path: ["MAIL_FROM"],
     },
   );
 
