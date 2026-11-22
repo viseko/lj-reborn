@@ -80,3 +80,26 @@ jobs:
           name: playwright-report
           path: e2e/playwright-report
           retention-days: 14
+  deploy:
+    needs: checks
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy over SSH
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/dagone
+          chmod 600 ~/.ssh/dagone
+          ssh-keyscan -H 889592.cloud4box.ru >> ~/.ssh/known_hosts
+          ssh -i ~/.ssh/dagone -o BatchMode=yes dagone@889592.cloud4box.ru 'bash -s' << 'EOF'
+          set -euo pipefail
+          cd "$HOME/lj-reborn"
+          git pull --ff-only
+          pnpm install --frozen-lockfile
+          pnpm --filter @lj/backend exec prisma generate
+          pnpm --filter @lj/backend exec prisma migrate deploy
+          NEXT_PUBLIC_API_URL=https://api.dagone.ru pnpm --filter @lj/frontend build
+          pm2 reload ecosystem.config.cjs --update-env
+          EOF
