@@ -113,7 +113,7 @@
   - [x] 7.7.1 Домен `dagone.ru` (reg.ru) и DNS: A-записи `@`, `api`, `www` → IP VPS (cloud4box). Резолвится
   - [x] 7.7.2 Бэк готов к проду: `start` — `tsx src/server.ts` без `watch` (вариант A: тот же способ запуска, что проверяет e2e — `webServer` запускает именно `start`; `tsx` в `dependencies`; сборка — в «Потом»); `refine` на всей схеме: в production обязательны `SMTP_HOST`, `COOKIE_DOMAIN`, `CORS_ORIGIN` (не равен localhost-default). Проверено запуском с `NODE_ENV=production` — бэк не стартует, Zod перечисляет поля
   - [x] 7.7.3 Сервер: отдельный пользователь Linux `dagone` (без пароля и sudo, вход через `sudo -iu dagone`), код по HTTPS из публичного репо, роль и база PostgreSQL `dagone` (`REVOKE CONNECT … FROM PUBLIC`), порты 3020 (фронт) / 4010 (бэк) на `127.0.0.1`, `.env` прода с `chmod 600` (своя пара ключей, сгенерирована на сервере), `prisma generate`, `migrate deploy`, сборка фронта. Бэк стартует на `127.0.0.1:4010`
-  - [ ] 7.7.4 pm2: процессы `dagone-backend` / `dagone-frontend`, автозапуск после перезагрузки
+  - [x] 7.7.4 pm2 от пользователя `dagone`: `ecosystem.config.cjs`, процессы `dagone-backend` (`127.0.0.1:4010`) и `dagone-frontend` (`127.0.0.1:3020`, порт `3010` занят Umami). Снимок `/home/dagone/.pm2/dump.pm2`. systemd-служба `pm2-dagone.service` (`User=dagone`, при загрузке `pm2 resurrect`), `systemctl is-enabled` → `enabled`. Перезагрузку сервера не делали
   - [ ] 7.7.5 nginx: два `server` (домен → порт), HTTPS через Let's Encrypt (certbot)
   - [ ] 7.7.6 Почта в проде: настоящий SMTP, `MAIL_FROM` на домене
   - [ ] 7.7.7 CD: автодеплой из GitHub Actions после зелёного CI
