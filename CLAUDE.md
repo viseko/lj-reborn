@@ -4,7 +4,7 @@
 
 ## Где что лежит
 
-- Роадмап с отметками и разделом «Решения»: `docs/ROADMAP.md`
+- Роадмап с отметками и разделом «Решения»: `docs/roadmaps/Roadmap_Stage_1.md` (закрыт), `docs/roadmaps/Roadmap_Stage_2.md` (текущий)
 - Журнал сессий (прогресс, пробелы, ошибки): `docs/learning/journal.md` — читать перед началом работы, дописывать в конце.
 - Шпаргалки по пройденным темам: `docs/cheatsheets/` (backend/, frontend/, common/) — не в git, только для справки.
 - Монорепо pnpm: `backend/` (Fastify + Prisma), `frontend/` (Next.js App Router + FSD), `packages/shared/` (общие Zod-схемы).
