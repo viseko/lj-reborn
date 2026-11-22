@@ -10,7 +10,7 @@ module.exports = {
     {
       name: "dagone-frontend",
       script: "pnpm",
-      args: "--filter @lj/frontend start -p 3010 -H 127.0.0.1",
+      args: "--filter @lj/frontend start -p 3020 -H 127.0.0.1",
       interpreter: "none",
       cwd: __dirname,
     },
